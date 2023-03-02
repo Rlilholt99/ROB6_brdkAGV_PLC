@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<OpcUaSource FileVersion="7" ArVersion="C4.72">
+<?AutomationStudio FileVersion="4.9"?>
+<OpcUaSource FileVersion="9" ArVersion="B4.91">
   <Aliases>
     <ACLAliases>
       <ACL Id="1">
-        <ACE RoleId="2" RoleName="Everyone" Access="0x015F" />
+        <ACE RoleName="Everyone" Access="0x015F" />
       </ACL>
       <ACL Id="2">
-        <ACE RoleId="2" RoleName="Everyone" Access="0x017F" />
+        <ACE RoleName="Everyone" Access="0x017F" />
       </ACL>
     </ACLAliases>
     <EURangeViolationAliases />
@@ -17,12 +18,16 @@
     <Module Name="&lt;Default&gt;">
       <Task Name="motorCtrl">
         <Variable Name="ros" MinimumSamplingInterval="Timer1">
-          <Variable Name="topics" AutomaticEnable="True">
+          <Variable Name="topics" RecursiveEnable="1">
             <Variable Name="twist" MinimumSamplingInterval="Timer1" />
             <Variable Name="config" />
             <Variable AclInherit="1" Name="odemetry" MinimumSamplingInterval="Timer1" />
           </Variable>
         </Variable>
+      </Task>
+      <Task Name="VisionMain">
+        <Variable Name="test" />
+        <Variable Name="overlay" />
       </Task>
     </Module>
   </DefaultView>

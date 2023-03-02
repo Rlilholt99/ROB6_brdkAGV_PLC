@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?AutomationStudio FileVersion="4.9"?>
+<Library Version="5.01.0" SubType="ANSIC" xmlns="http://br-automation.co.at/AS/Library">
+  <Files>
+    <File Description="brdkMU data types.">brdkMU.typ</File>
+    <File Description="brdkEM data types.">brdkEM.typ</File>
+    <File Description="brdkCM data types.">brdkCM.typ</File>
+    <File Description="brdkUM data types.">brdkUM.typ</File>
+    <File Description="brdkMU constants.">brdkMU.var</File>
+    <File Description="brdkMU functions.">brdkMU.fun</File>
+    <File Description="Represents an equipment module.">brdkEM.c</File>
+    <File Description="Converts an equipment module mode constant to a string representation.">brdkEMModeToA.c</File>
+    <File Description="Converts an equipment module state enum to a string representation.">brdkEMStateToA.c</File>
+    <File Description="Sleep functionality.">brdkEMSleep.c</File>
+    <File Description="Header for internal functions for brdkEM.">brdkEM_func.h</File>
+    <File Description="Internal functions for brdkEM.">brdkEM_func.c</File>
+    <File Description="Represents a control module.">brdkCM.c</File>
+    <File Description="Changes the parent of a control module.">brdkCMChangeParent.c</File>
+    <File Description="Sleep functionality.">brdkCMSleep.c</File>
+    <File Description="Header for internal functions for brdkEM.">brdkCM_func.h</File>
+    <File Description="Unit Machine / Information Receiver.">brdkUM.c</File>
+    <File Description="Header for internal functions for brdkUM.">brdkUM_func.h</File>
+    <File Description="Internal functions for brdkUM.">brdkUM_func.c</File>
+    <File Description="Header for internal functions for brdkMU.">brdkMU_func.h</File>
+    <File Description="Internal functions for brdkMU.">brdkMU_func.c</File>
+    <File Description="brdkMU license.">LICENSE</File>
+    <File Description="brdkMU change log file">CHANGELOG</File>
+  </Files>
+  <Dependencies>
+    <Dependency ObjectName="AsSem" />
+    <Dependency ObjectName="sys_lib" />
+    <Dependency ObjectName="brsystem" />
+    <Dependency ObjectName="brdkSTR" FromVersion="1.03.1" />
+  </Dependencies>
+</Library>

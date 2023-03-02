@@ -36,44 +36,4 @@
       </Group>
     </Group>
   </Element>
-  <Element ID="gWaterTank_0" Type="exoscomponent">
-    <Property ID="PackageSelection" Value="Logical\WaterTank\WaterTank.exospkg" />
-    <Property ID="ErrorHandling" Value="Component" />
-    <Property ID="RestartEvent" Value="Component" />
-    <Property ID="StartupTimeout" Value="0" />
-    <Group ID="Predefined">
-      <Group ID="Files">
-        <Group ID="File[0]">
-          <Property ID="FileName" Value="Linux\watertank.py" />
-          <Property ID="ChangeEvent" Value="Restart" />
-        </Group>
-        <Group ID="File[1]">
-          <Property ID="FileName" Value="Linux\exos-comp-watertank_1.0.0_amd64.deb" />
-          <Property ID="ChangeEvent" Value="Reinstall" />
-        </Group>
-      </Group>
-      <Group ID="Services">
-        <Group ID="Service[0]">
-          <Property ID="Type" Value="Install" />
-          <Property ID="Command" Value="dpkg -i exos-comp-watertank_1.0.0_amd64.deb" />
-          <Property ID="WorkingDirectory" />
-        </Group>
-        <Group ID="Service[1]">
-          <Property ID="Type" Value="Remove" />
-          <Property ID="Command" Value="dpkg --purge exos-comp-watertank" />
-          <Property ID="WorkingDirectory" />
-        </Group>
-        <Group ID="Service[2]">
-          <Property ID="Type" Value="Startup" />
-          <Property ID="Command" Value="cp watertank.py /home/user/watertank" />
-          <Property ID="WorkingDirectory" />
-        </Group>
-        <Group ID="Service[3]">
-          <Property ID="Type" Value="Runtime" />
-          <Property ID="Command" Value="python3 watertank.py" />
-          <Property ID="WorkingDirectory" Value="/home/user/watertank" />
-        </Group>
-      </Group>
-    </Group>
-  </Element>
 </Configuration>

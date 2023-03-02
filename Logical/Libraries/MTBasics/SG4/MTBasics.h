@@ -1,6 +1,6 @@
 /* Automation Studio generated header file */
 /* Do not edit ! */
-/* MTBasics 5.19.0 */
+/* MTBasics 5.20.0 */
 
 #ifndef _MTBASICS_
 #define _MTBASICS_
@@ -9,7 +9,7 @@ extern "C"
 {
 #endif
 #ifndef _MTBasics_VERSION
-#define _MTBasics_VERSION 5.19.0
+#define _MTBasics_VERSION 5.20.0
 #endif
 
 #include <bur/plctypes.h>
@@ -334,6 +334,13 @@ typedef struct MTBasicsPFMInternalType
 	plcbit EnableOld;
 } MTBasicsPFMInternalType;
 
+typedef struct MTBasicsPIDParametersType
+{	double Gain;
+	double IntegrationTime;
+	double DerivativeTime;
+	double FilterTime;
+} MTBasicsPIDParametersType;
+
 typedef struct MTBasicsPIDInternalType
 {	float CycleTime;
 	plcbit ParametersValid;
@@ -357,6 +364,11 @@ typedef struct MTBasicsPIDInternalType
 	unsigned long CounterOld;
 	plcbit SysRefParaNew;
 	struct MTTransferFcnType SystemReference;
+	struct MTBasicsPIDParametersType PIDParametersLREAL;
+	double PIDOutput;
+	double ProportionalPart;
+	double IntegrationPart;
+	double DerivativePart;
 } MTBasicsPIDInternalType;
 
 typedef struct MTBasicsPT1InternalType

@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <?AutomationStudio Version=4.12.2.93 FileVersion="4.9"?>
 <Hardware xmlns="http://br-automation.co.at/AS/Hardware">
+  <Module Name="VSS112R22.051P-000" Type="VSS112R22.051P-000" Version="1.7.0.605">
+    <Connection Connector="PLK1" TargetModule="X90CP174_48_00" TargetConnector="IF3" NodeNumber="1">
+      <Cable Type="PowerlinkCable" Length="10" Version="1.0.0.3" />
+    </Connection>
+    <Parameter ID="Supervision" Value="off" />
+    <Parameter ID="VisionConfig" Value="gCamera" />
+  </Module>
   <Module Name="X90AO410.08-00" Type="X90AO410.08-00" Version="1.1.0.0">
     <Connection Connector="ST" TargetModule="X90CP174_48_00" TargetConnector="ST4" />
   </Module>
@@ -50,12 +57,18 @@
       <Parameter ID="SubnetMask" Value="255.255.255.0" />
     </Connector>
     <Connector Name="IF3">
-      <Parameter ID="DNAConfiguration" Value="manual" />
+      <Parameter ID="MtuSize" Value="1500" />
+      <Parameter ID="CycleTime" Value="5000" />
+      <Parameter ID="InternetAddress" Value="192.168.200.240" />
+      <Parameter ID="SubnetMask" Value="255.255.255.0" />
     </Connector>
     <Parameter ID="ConfigurationID" Value="AGV_Config1" />
     <Parameter ID="UserPartitionSize" Value="0" />
     <Parameter ID="EnableUsbRemoteInstall" Value="1" />
     <Parameter ID="EnableCfRemoteInstall" Value="1" />
+    <Parameter ID="TimerDeviceType" Value="EPLX2X" />
+    <Parameter ID="TimerDevice" Value="X90CP174_48_00.IF3" />
+    <Parameter ID="TaskClassIdleTime" Value="5000" />
     <Parameter ID="Cyclic1Duration" Value="5000" />
     <Parameter ID="Cyclic1Tolerance" Value="0" />
     <Parameter ID="Cyclic2Duration" Value="20000" />
@@ -75,8 +88,12 @@
     <Group ID="FileDevice1" />
     <Parameter ID="FileDeviceName1" Value="USER" />
     <Parameter ID="FileDevicePath1" Value="USER_PATH" />
+    <Group ID="Route1" />
+    <Parameter ID="DestinationAddress1" Value="10.0.0.2" />
+    <Parameter ID="SubnetMask1" Value="255.255.255.0" />
     <Parameter ID="ActivateOpcUa" Value="1" />
     <Parameter ID="OpcUaInformationModels_PV_Version" Value="2" />
+    <Parameter ID="OpcUaInformationModel_BaseObjectTypeForStructures" Value="0" />
   </Module>
   <Module Name="X90DI110.10-00" Type="X90DI110.10-00" Version="1.1.1.0">
     <Connection Connector="ST" TargetModule="X90CP174_48_00" TargetConnector="ST2" />

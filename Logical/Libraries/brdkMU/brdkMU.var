@@ -1,0 +1,29 @@
+VAR CONSTANT
+	BRDK_MU_MAX_MODULES : UINT := 2000; (*Maximum numbers of machine units.*)
+	BRDK_MU_NAME_STRING_SIZE : UINT := 80; (*Maximum size of the module name.*)
+	BRDK_MU_MAX_DESCRIPTION_STRING : UINT := 200; (*Maximum size of string description.*)
+	BRDK_MU_MAX_LAST_SIZE : UINT := 19; (*Maximum size of last/history array. (19 means 20)*)
+	BRDK_MU_MAX_SIBLINGS : UINT := 3; (*Maximum number of siblings to a module. (3 means 4)*)
+	BRDK_EM_MAX_CUSTOM_MODES : UINT := 9; (*Maximum number of custom modes. (9 means 10)*)
+	BRDK_EM_MAX_MODE_NAME_SIZE : UINT := 80; (*Maximum size of mode name.*)
+	BRDK_EM_MAX_CHILDREN : UINT := 99; (*Maximum number of children to a module.*)
+	BRDK_EM_FLASH_TIME : UINT := 1000; (*[ms] Color flash time.*)
+	BRDK_MU_MAX_TOP_MODULES : UINT := 20; (*Maximum number of top equipment modules. A top module is an equipment module with no parent.*)
+	BRDK_UM_MAX_PRODUCTS : UINT := 9; (*Maximum number of product PackTags. (9 means 10)*)
+	MODE_UNDEFINED : DINT := 0; (*Initialization of Unit when power up.*)
+	MODE_PRODUCING : DINT := 1; (*This represents the mode which is utilized for routine production. The machine executes
+relevant logic in response to commands which are either entered directly by the operator or
+issued by another supervisory system.*)
+	MODE_MAINTENANCE : DINT := 2; (*This mode may allow suitably authorized personnel the ability to run an individual machine
+independent of other machines in a production line. This mode would typically be used for
+faultfinding, machine trials, or testing operational improvements.*)
+	MODE_MANUAL : DINT := 3; (*This provides direct control of individual machine modules. This feature is available
+depending upon the mechanical constraints of the mechanisms being exercised. This feature
+may be used for the commissioning of individual drives, verifying the operation of
+synchronized drives, testing the drive as a result of modifying parameters, etc.*)
+	MODE_CLEAN : DINT := 16; (*Clean the Unit.*)
+	MODE_JOG : DINT := 17; (*Step through a process.*)
+	MODE_CIP : DINT := 18; (*Cleaning in progress.*)
+	MODE_CALIBRATING : DINT := 19; (*Calibrating mode.*)
+	SC : UINT := 65000; (*Sub state completet state. If enable and substate is set to SC it will work as the cmd.sc.*)
+END_VAR

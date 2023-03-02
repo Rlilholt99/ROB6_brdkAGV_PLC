@@ -1,6 +1,6 @@
 /* Automation Studio generated header file */
 /* Do not edit ! */
-/* MTFilter 5.19.0 */
+/* MTFilter 5.20.0 */
 
 #ifndef _MTFILTER_
 #define _MTFILTER_
@@ -9,7 +9,7 @@ extern "C"
 {
 #endif
 #ifndef _MTFilter_VERSION
-#define _MTFilter_VERSION 5.19.0
+#define _MTFilter_VERSION 5.20.0
 #endif
 
 #include <bur/plctypes.h>

@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?AutomationStudio FileVersion="4.9"?>
+<Configuration>
+  <Element ID="ViApplication" Type="visionapplication">
+    <Group ID="ImgProcessingInputs">
+      <Group ID="Input[0]">
+        <Property ID="ChannelID" Value="Enable" />
+      </Group>
+      <Group ID="Input[1]">
+        <Property ID="ChannelID" Value="Alignment" />
+      </Group>
+      <Group ID="Input[2]">
+        <Property ID="ChannelID" Value="OffsetRoiX" />
+      </Group>
+      <Group ID="Input[3]">
+        <Property ID="ChannelID" Value="OffsetRoiY" />
+      </Group>
+      <Group ID="Input[4]">
+        <Property ID="ChannelID" Value="OffsetRoiOrientation" />
+      </Group>
+      <Group ID="Input[5]">
+        <Property ID="ChannelID" Value="OffsetRoiRotationCenterX" />
+      </Group>
+      <Group ID="Input[6]">
+        <Property ID="ChannelID" Value="OffsetRoiRotationCenterY" />
+      </Group>
+      <Group ID="Input[7]">
+        <Property ID="ChannelID" Value="RegionalFeatures" />
+      </Group>
+      <Group ID="Input[8]">
+        <Property ID="ChannelID" Value="EnhancedBlobInfo" />
+      </Group>
+      <Group ID="Input[9]">
+        <Property ID="ChannelID" Value="NumSearchMax" />
+      </Group>
+    </Group>
+    <Group ID="ImgProcessingVariables" />
+    <Group ID="VisionFunctionSet">
+      <Group ID="VisionProgramSettings">
+        <Property ID="CompilerOption" Value="0" />
+      </Group>
+      <Group ID="VfInstance[1]">
+        <Property ID="VfName" Value="viTest" />
+        <Property ID="VfExecutionNr" Value="1" />
+        <Selector ID="VfType" Value="vf-blob">
+          <Group ID="VfWirings">
+            <Group ID="Image">
+              <Selector ID="SourceType" Value="ImageAcquisition">
+                <Property ID="IaParameter" Value="Image01" />
+              </Selector>
+            </Group>
+            <Group ID="Enable">
+              <Selector ID="SourceType" Value="Input">
+                <Property ID="IoParameter" Value="Enable" />
+              </Selector>
+            </Group>
+            <Group ID="NumSearchMax">
+              <Selector ID="SourceType" Value="Input">
+                <Property ID="IoParameter" Value="NumSearchMax" />
+              </Selector>
+            </Group>
+            <Group ID="Alignment">
+              <Selector ID="SourceType" Value="Input">
+                <Property ID="IoParameter" Value="Alignment" />
+              </Selector>
+            </Group>
+            <Group ID="RegionFeatures">
+              <Selector ID="SourceType" Value="Input">
+                <Property ID="IoParameter" Value="RegionalFeatures" />
+              </Selector>
+            </Group>
+            <Group ID="EnhancedBlobInformation">
+              <Selector ID="SourceType" Value="Input">
+                <Property ID="IoParameter" Value="EnhancedBlobInfo" />
+              </Selector>
+            </Group>
+            <Group ID="OffsetROIX">
+              <Selector ID="SourceType" Value="Input">
+                <Property ID="IoParameter" Value="OffsetRoiX" />
+              </Selector>
+            </Group>
+            <Group ID="OffsetROIY">
+              <Selector ID="SourceType" Value="Input">
+                <Property ID="IoParameter" Value="OffsetRoiY" />
+              </Selector>
+            </Group>
+            <Group ID="OffsetROIOrientation">
+              <Selector ID="SourceType" Value="Input">
+                <Property ID="IoParameter" Value="OffsetRoiOrientation" />
+              </Selector>
+            </Group>
+            <Group ID="OffsetROIRotCenterX">
+              <Selector ID="SourceType" Value="Input">
+                <Property ID="IoParameter" Value="OffsetRoiRotationCenterX" />
+              </Selector>
+            </Group>
+            <Group ID="OffsetROIRotCenterY">
+              <Selector ID="SourceType" Value="Input">
+                <Property ID="IoParameter" Value="OffsetRoiRotationCenterY" />
+              </Selector>
+            </Group>
+          </Group>
+        </Selector>
+        <Group ID="Position">
+          <Property ID="X" Value="1" />
+          <Property ID="Y" Value="0" />
+        </Group>
+      </Group>
+    </Group>
+    <Group ID="ImgProcessingOutputs">
+      <Group ID="Output[0]">
+        <Property ID="ChannelID" Value="BlobXMin" />
+        <Group ID="VpOutputWire">
+          <Property ID="SourceVfName" Value="viTest" />
+          <Property ID="VfOutputParameter" Value="Xmin" />
+        </Group>
+      </Group>
+      <Group ID="Output[1]">
+        <Property ID="ChannelID" Value="BlobYMin" />
+        <Group ID="VpOutputWire">
+          <Property ID="SourceVfName" Value="viTest" />
+          <Property ID="VfOutputParameter" Value="Ymin" />
+        </Group>
+      </Group>
+      <Group ID="Output[2]">
+        <Property ID="ChannelID" Value="BlobXMax" />
+        <Group ID="VpOutputWire">
+          <Property ID="SourceVfName" Value="viTest" />
+          <Property ID="VfOutputParameter" Value="Xmax" />
+        </Group>
+      </Group>
+      <Group ID="Output[3]">
+        <Property ID="ChannelID" Value="BlobYMax" />
+        <Group ID="VpOutputWire">
+          <Property ID="SourceVfName" Value="viTest" />
+          <Property ID="VfOutputParameter" Value="Ymax" />
+        </Group>
+      </Group>
+    </Group>
+  </Element>
+</Configuration>

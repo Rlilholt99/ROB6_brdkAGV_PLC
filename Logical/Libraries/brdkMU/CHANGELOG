@@ -1,0 +1,329 @@
+# Change Log
+
+All notable changes to brdkMU will be documented in this file.
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and brdkMU adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+TODO: fix problem with child list after deactivation
+
+## [5.1.0] - 2020-03-02
+### Added
+- brdkEMModeToA().pEM - Pointer for equipment module
+- brdkEM.setup.customModeNames - Structure for adding custom mode names
+
+### Fixed
+- brdkEMModeToA() - Function could return 0 pointer whe mode names was unknown
+
+## [5.0.2] - 2020-02-26
+### Fixed
+- sibling.sc was not updated
+
+## [5.0.1] - 2019-12-19
+### Fixed
+- brdkEM.status.time - When cycle time was below 1ms it did not count
+
+## [5.0.0] - 2019-02-19
+### Added
+- brdkEM.setup.status - Enable or disable status functionality.
+- brdkEM.setup.status.stateSubstateMode - State, sub state and mode strings.
+- brdkEM.setup.status.last - Last log entries.
+- brdkEM.setup.status.waitingFor - Waiting for.
+- brdkCM.setup.status.last - Last log entries.
+- brdkCM.setup.status.state - State string.
+
+### Changed
+- brdkEM.mode - no longer set to MODE_UNDEFINED in STATE_DEACTIVATING
+
+### Fixed
+- brdkEM.status.waitingFor - now only makes a string copy when changes are made in the name or in the status text
+- brdkEM.status.state - not writing cyclic in STATE_DEACTIVATED anymore
+- brdkEM.setup.activation - fixed a situation where a child would enter the parents child list before it was activated 
+
+### Removed
+- brdkEM/CM.setup.lastActivated - moved to brdkEM/CM.setup.status.last
+- brdkEM.setup.activation - BRDK_EM_ACTIVATE_BY_CHILD removed because it was not used
+
+## [4.4.0] - 2018-12-13
+### Added
+- brdkEM/CM.status.parent.sc - Shows if command SC is set on the parent module
+
+### Changed
+- Interrupted by data is reset both in STATE_RESETTING and STATE_CLEARING
+
+## [4.3.0] - 2018-09-18
+### Added
+- brdkEM/CM.setup.lastActivated - Can be switched off if the EM/CM is called in a very low cycle task
+- brdkEM - Detection if a module name is already being used. An error message will be set in the initialization of the module
+- brdkEM.setup.restore - Functionality to restore a module to it's state after a e.g. power failure.
+- brdkEM.setup.pRestoreStruct - Pointer to the restore structure. Must be defined directly in the task in order to make it retain/permanent.
+- brdkEM.setup.activate - Activates the storing of the module information in the restore structure. This is to avoid overwriting the restore information.
+
+### Fixed
+- brdkEM.substate = SC - brdkEM.cmd.sc was not reset if the substate had been set to SC and changed to something else
+
+## [4.2.0] - 2017-10-04
+### Added
+- brdkEM.setup.useSubstateSC - If enabled it possible to set the cmd.sc by setting the substate = SC. See sample brdkMU11_ST.
+
+### Changed
+- minimum version of brdkSTR library changed to 1.03.1.
+ 
+## [4.1.0] - 2017-07-12
+### Added
+- brdkEM/CM.status.parent.mode - The modules mode is also transferred.
+- brdkEM/CM.status.sibling[].mode - The modules mode is also transferred.
+
+### Fixed
+- An equipment module will now check in STATE_CLEARING if a child or a parent is STATE_ABORTING or STATE_ABORTED.
+
+## [4.0.0] - 2017-05-01
+### Removed
+- brdkEM.cmd.activate - Replaced by brdkEM.setup.activation = BRDK_EM_BRDK_EM_ACTIVATE.
+- brdkEM.setup.followParentsActivation - Replaced by brdkEM.setup.activation = BRDK_EM_ACTIVATE_BY_PARENT.
+- brdkEMWake.activate - Replaced by brdkEMWake.activation = BRDK_EM_BRDK_EM_ACTIVATE.
+- brdkEMWake.followParentsActivation - Replaced by brdkEMWake.activation = BRDK_EM_ACTIVATE_BY_PARENT.
+- brdkEMAlloc - Replaced by brdkEMWake().
+- brdkEMFree - Replaced by brdkEMSleep().
+- brdkCMAlloc - Replaced by brdkCMWake().
+- brdkCMFree - Replaced by brdkCMSleep().
+- brdkEM/CM.setup.parent.pvName - Replaced by brdkEM.setup.parent.name.
+- brdkEM/CM.setup.sibling.pvName - Replaced by brdkEM.setup.sibling.name.
+- SC - Replaced by brdkEM.cmd.sc(). Functionality to set SC by setting substate = SC is removed.
+- brdkEM/CMWake() - brdkEM/CM can now be declared as a normal pv. 
+- brdkEM/CM -AddSibling() - Just set the name of the sibling in setup.sibling[]
+- sample brdkMU2_ST and brdkMU3_C removed
+
+### Fixed
+- brdkEM.cmd.abort - Equipment module will now abort in STATE_STOPPING
+
+### Changed
+- Constant BRDK_MU_MAX_LAST_SIZE changed from 9 to 19. Now default holds the last 20 state and substate changes.
+- brdkEM.status.last - Logging of interrupter child with state and substate.
+  Substate changes are now also logged in.
+- brdkEM/CM.name - This setup name will not be change by the library anymore. To see the logical name with index use brdkEM/CM.status.name instead.
+- samples renamed
+
+### Added
+- brdkEM.setup.activation - Type of activation of equipment module.
+- brdkCMChangeParent - Changes the parent of a control module.
+
+## [3.3.1] - 2016-12-29
+### Fixed
+- brdkCM.status.state - Updates to a new description also if the substate changes.
+  The substate is also included in the state description if the substate != 0.
+- brdkCM.status.last - Substate is only included if the substate != 0 or if the old substate != 0.
+
+## [3.3.0] - 2016-12-23
+### Added
+- brdkEM.setup.followParentsActivation - Automatically follows it's parent activation command.
+- brdkEMWake.followParentsActivation - Automatically follows it's parent activation command.
+- brdkEM.setup.reactTo - Listen modes has been added so the module is able to run freely but still listen to parents
+  stop or/and abort command. 
+  When brdkEM.setup.reactTo is set back to BRDK_EM_REACT_TO_ALL the module will automatically find the parent state .
+
+### Fixed
+- Better error description when register and unregister a child to it's parent.
+- More description to sample tasks.
+
+## [3.2.0] - 2016-10-06
+### Changed
+- brdkEM.status.waitingFor.info - changed STRING length from 28 to BRDK_MU_MAX_DESCRIPTION_STRING.
+- brdkEM.status.waitingFor - Goes through the hierarchy and find a module who is waiting for someone else.
+- brdkEM.mode - Default start mode is MODE_PRODUCING (1)  
+  
+### Added
+- brdkEMWake() - Wakes up an equipment module either by getting it's existing pointer or by allocating new memory for the module.
+- brdkEMSleep() - Put an equipment module to sleep. It's pointer is added to a sleeping module list where it can be found again by brdkEMWake().
+- brdkEMAddSibling() - Adds a sibling to an equipment module setup.
+- brdkCMWake() - Wakes up a control module either by getting it's existing pointer or by allocating new memory for the module.
+- brdkCMSleep() - Put a control module to sleep. It's pointer is added to a sleeping module list where it can be found again by brdkEMWake().
+- brdkCMAddSibling() - Adds a sibling to a control module setup.
+- brdkEM.cmd.sc - The State Complete indication within the Acting state procedure will cause a state transition to occur. (same functionality as substate = SC).
+- brdkEM/CM.setup.parent.name - Logical name of the module. PV names not allowed.
+- brdkEM/CM.setup.sibling.name - Logical name of the module. PV names not allowed.
+- BRDK_MU_MAX_SLEEPING_MODULES - Maximum number of sleeping modules.
+- brdkEM/CM.status.sleeping - Indicates that the module is sleeping meaning that the module is not being executed because a new instance is being transferred.
+- brdkCM.status.sibling - List of available siblings.
+- brdkEM/CM.status.level - Level in the hierarchy. Parent is level 0.
+
+### Deprecated
+- brdkEM/CM.setup.parent.pvName - brdkEM/CM.setup.parent.name where it's only possible to enter a logical name.
+- brdkEM/CM.setup.sibling.pvName - brdkEM/CM.setup.sibling.name where it's only possible to enter a logical name.
+- brdkEMAlloc()
+- brdkEMFree()
+- brdkCMAlloc()
+- brdkCMFree()
+
+## [3.1.1] - 2016-09-16
+### Fixed
+- When a child is deactivated it will unregister from it's parent.
+
+## [3.1.0] - 2016-08-01
+### Fixed
+- The substate is now allowed to be changed in STATE_DEACTIVATED.
+  If the substate is 0 when the initialization is done it's automatically set to SC, ready for activate cmd.
+- 100% guarantee that PV_xgetadr() only is called in INIT PROGRAM.
+- Constant MODE_MAINTENANCE was spelled wrong before (MODE_MAINTENCE).
+- brdkEM.status.last - When a module was interrupted by itself it made an error in logging the messages in the last array.
+- brdkEM.status.interruptedBy - When a module was interrupted by itself it was not logged in this structure.
+  Resetting of this structure in STATE_RESETTING has also been fixed.
+
+### Added
+- brdkUM() - Unit Machine / Information Receiver module. It makes communication with a remote system easy. This fb makes it possible to remote control an equipment module.
+- brdkEM.status.unvalidatedCmd - Indicates that the current state cannot accept the given command.
+- brdkEM.status.unvalidatedMode - Indicates that the current state cannot accept the given mode change. Modes can only be chnaged in STATE_STOPPED and in STATE_ACTIVATING.
+- brdkEM.status.mode - String representation of the mode. 
+- More help information about brdkEM.cmd.activate
+- More help information about STATE_DEACTIVATED
+- Conatant BRDK_UM_MAX_PRODUCTS - Maximum number of product PackTags. (9 means 10)
+- Constant BRDK_MU_MAX_TOP_MODULES - Maximum number of top equipment modules. A top module is an equipment module with no parent.
+
+### Changed
+- Now uses brdkSTR library v.1.2.0 - Make sure to update library.
+- brdkMU now only uses brdkSTR functions. No need for string.h
+- brdkEM.cmd.activate - It's now possible to deactivate a module even though it doesn't have a parent.
+  It's only possible to deactivate a parent module if all the children are in either STATE_DEACTIVATED or STATE_ACTIVATING. If not the unvalid command flag will be set.
+- brdkEM.mode - It's now possible to change the mode in STATE_ACTIVATING
+- brdkEM.mode - If the mode is MODE_UNDEFINED in STATE_ACTIVATING and substate = SC then the mode automatically will be set to MODE_PRODUCING or it's parent's mode
+- brdkEM.last - Logs a mode change. from mode --> to mode
+- brdkEM.status.interruptedBy - Now displays the name of the actual module who either stopped or aborted the hierarchy.
+- brdkEM.status.interruptedBy - Now displays the name of the parent module that gave a command and changed the state of the hierarchy.
+- brdkEM/CM.setup.parent.pvName - It's now possible to set the parent with a logical name of an equipment module.
+  The logical name is the name that was set to the parent in brdkEM.setup.name.
+- brdkEM.setup.parent - It's now possible to change a parent module. The module has to be in STATE_DEACTIVATED to make a parent change.
+  
+## [3.0.0] - 2016-06-13
+### Fixed
+- brdkEM/cm.setup.parent.index(brdkEM/CM.setup.parentIdx)- kept adding index to the parent name if the module was not ready. 
+
+### Changed
+- brdkEM/CM.setup.parentIdx - '[<parentIdx>]' will be appended to parentModule either just to the PV name or to a parent structure.
+  Read more about this feature in the help under em/cm.setup.
+- brdkEM/CM.setup.parent.index - new name for brdkEM/CM.setup.parentIdx. Changes has been made to make a more common structures for both em and cm modules.
+- brdkEM/CM.setup.parent.pvName - new name for brdkEM/CM.setup.parentModule. Changes has been made to make a more common structures for both em and cm modules.
+- brdkMU library now needs the brdkSTR library for string functions.
+- minor correction to the descriptions in the library help.
+
+### Added
+- brdkEM.setup.skipStopSC - When this paramter is activated the module will always stop even though it's not in sub state SC.
+- brdkEM.setup.sibling - Here it's possible to setup and add siblings to the module
+- brdkEM.status.sibling - State and sub state of the added siblings
+  
+### Removed
+- brdkEM.cmd.ignore -  has been replaced by brdkEM.setup.reactTo
+  
+## [2.5.1] - 2016-04-08
+### Changed
+- brdkEMFree() - Calls UnregisterChild() before the memory is deallocated so the child list don't contain an illegal pointer
+- children will wait in STATE_ACTIVATING until it's parent is in STATE_STOPPED before it will go into STATE_STOPPED
+- parent will also ignore a child that is in STATE_ACTIVATING 
+
+## [2.5.0] - 2016-03-03
+### Fixed
+- brdkEM/CM.setup.parentIdx - '[<parentIdx>].emAddress' will be appended to parentModule. 
+  E.g. parentModule ='parent:this' and parentIdx = 0 will result in parent:this[0].emAddress
+  Earlier 'parent:em' would result in 'parent:em[0]' which does not exist in parent because em is a reference to this[i].emAddress updated in the beginnig of a FOR loop
+- brdkEM.status.waitingFor - did not get updated if more childs where stuck/slow and the first one moved on
+- brdkEM.status.state - fixed so it'snot one scan behind anymore
+- brdkEM.status.time - fixed to time now matched
+
+### Added
+- brdkEMStateToA() - Converts an equipment module state enum to a string representation.
+
+### Changed
+- brdkEM.status.waitingFor - changed status.substate from 'SC: waiting for children' to 'SC: waiting for <child name>, <child status.substate>'
+- Help texts in .fun file change to uppercase and added a .
+
+## [2.4.0] - 2016-01-29
+### Added
+- brdkEM.status.parent - parent status similar to brdkCM parent status
+
+### Changed
+- brdkEM substate now needs to be in SC before a stop command is accepted
+
+## [2.3.0] - 2016-01-17
+### Deprecated
+- brdkEM.cmd.ignore - is being replaced of brdkEM.setup.reactTo
+
+### Added
+- brdkEM.setup.name - if the name is not set the task name is used instead
+- brdkEM.setup.nameIdx - if greather that 0 the index number is added to the module name
+- brdkEM.setup.parentIdx - adds an index to the parent name
+- brdkCM.setup.name - if the name is not set the task name is used instead
+- brdkCM.setup.nameIdx - if greather that 0 the index number is added to the module name
+- brdkCM.setup.parentIdx - adds an index to the parent name
+- module sample now uses brdkEM.setup.nameIdx 
+- brdkEM.setup.reactTo - possiblity to setup which state a module should react to
+- brdkEM.status.time - Actual time spend in the current state.
+- brdkEM.status.last - Now includes the time spend in the current state.
+- brdkCM.status.time - Actual time spend in the current state.
+- brdkCM.status.last - Now includes the time spend in the current state.
+
+### Fixed
+- Make sure PV functions in STATE_DEACTIVATED is only called once
+- Renamed modules sample to module
+- Renamed thisWatch variabel to emWatch in module(s) sample
+
+### Changed
+- children waits in it's acting state for the parent also to be in the same acting state before making the state change
+- parent does not react to a childs waiting state only acting state
+- library include cleanup
+- help updated
+
+## [2.2.0] - 2015-12-23
+### Added
+- brdkEM.status.waitingFor - info: which child the parent is waiting for. Only the first found child is shown, but the parent might be waiting for more children
+
+### Changed
+- brdkMC library updated to version 2.0.0 in samples
+
+## [2.1.0] - 2015-12-09
+### Added
+- brdkEM.status.cycleTime - tells the actual cycle time is fb is called in
+- brdkCMAlloc - Allocates a memory area for brdkCM
+- brdkCMFree - Frees the memory used for a control module
+- brdkCM - Represents a control module. The module does not follow the ISA-TR88.00.02 standard.
+- brdkMU6_ST - simple example of usage of a control module
+- brdkMU7_ST - usage of a control module with an equipment module parent
+
+### Changed
+- More strict build options
+
+### Removed
+- brdkEM.internal.cycleTime
+
+### Fixed
+- Spelling error in description
+
+## [2.0.0] - 2015-10-14
+### Added
+- Help file included in library. Press F1 on library folder in Automation Studio.
+- brdkEMAlloc() - Allocates memory for function block to enable copy mode transfer.
+- brdkEMFree() - deallocates memory that is allocated using brdkEMAlloc.
+- Modes to comply with ISATR88.00.02 modes.
+- Module mode can only be changed in STATE_STOPPED, STATE_DEACTIVATED and STATE_ACTIVATING.
+- description input can be set to manipulate with the status.substate output.
+- status.last tell the last state and substate the module has been in.
+- status.interruptedBy outputs a string with the modules last state and substate.
+- STATE_ACTIVATING. Replaces the old STATE_INIT. The module will always go through STATE_ACTIVATING.
+- default status.substate info when description input is not set.
+- Multiple samples to demonstrate the usage of the function block.
+- mappable light tree status outputs.
+
+### Changed
+- Modes changed to constants instead of enum types.
+- Structure is now in a function block style instead of a pointer structure.
+- State is now an output of the function block and cannot be changed from outside the fb.
+- status->color changed to enum.
+
+### Removed
+- Time track functionality.
+- cmd.init
+- STATE_INIT
+- cmd->unhold. Set cmd->start to go from STATE_HELD -> STATE_UNHOLDING
+- cmd->unsuspend. Set cmd->start to go from STATE_SUSPENDED -> STATE_UNSUSPENDING
+
+### Fixed
+- Children listen to parent cmd STOP and ABORT even if substate is not SC.

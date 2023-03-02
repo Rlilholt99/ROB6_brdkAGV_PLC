@@ -1,7 +1,0 @@
-VAR
-	WaterTank_0 : WaterTank;
-	WaterTankCyclic_0 : WaterTankCyclic;
-	ExComponentInfo_0 : ExComponentInfo;
-	ExDatamodelInfo_0 : ExDatamodelInfo;
-	ExDataConnectionInfo_0 : ExDataConnectionInfo;
-END_VAR

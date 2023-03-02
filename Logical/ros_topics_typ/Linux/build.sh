@@ -14,6 +14,7 @@ if [ -z $EXOS_DATA_VERSION_INSTALLED ] ; then
     echo "ERROR: Did not find any version of $EXOS_DATA_PKG_NAME"
     echo "Please install exos-data-eth or exos-data in your build system:"
     echo "sudo ./setup_build_environment.sh"
+    sleep 5
     exit 1
 fi
 
@@ -27,6 +28,7 @@ elif [ "$1" != $EXOS_DATA_VERSION_INSTALLED ] ; then
     echo "ERROR: Version of $EXOS_DATA_PKG_NAME is $EXOS_DATA_VERSION_INSTALLED instead of required $1"
     echo "Please install the version $1 in your build system:"
     echo "sudo ./setup_build_environment.sh"
+    sleep 5
     exit 1
 fi
 
@@ -42,7 +44,7 @@ finalize() {
 
 mkdir build > /dev/null 2>&1
 rm -rf build/*
-
+gnome-terminal
 cd build
 
 cmake -Wno-dev ..

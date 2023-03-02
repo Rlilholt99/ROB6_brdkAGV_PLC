@@ -54,18 +54,6 @@
           </Group>
         </Group>
       </Group>
-      <Group ID="Component[1]">
-        <Property ID="ComponentConfigurationLink" Value="gWaterTank_0" />
-        <Group ID="DataModels">
-          <Group ID="Instance[0]">
-            <Property ID="InstanceName" Value="WaterTank_0" />
-            <Group ID="InstanceConnection">
-              <Property ID="InstancePort" Value="49004" />
-              <Property ID="InstanceShmPath" Value="WaterTank_0" />
-            </Group>
-          </Group>
-        </Group>
-      </Group>
     </Group>
     <Group ID="ComponentDataConnection">
       <Property ID="Version" Value="2.1.0-1" />

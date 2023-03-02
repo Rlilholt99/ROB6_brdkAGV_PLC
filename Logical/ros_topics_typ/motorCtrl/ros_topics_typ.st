@@ -4,7 +4,8 @@ PROGRAM _INIT
 	ros_topics_typInit_0();
 
 	(* Insert code here *)
-	FOR i:=0 TO i < 2 BY 1 DO
+	FOR i:=0 TO
+		i < 2 BY 1 DO
 		setupPointers;
 	
 		this.PID.Enable := TRUE;

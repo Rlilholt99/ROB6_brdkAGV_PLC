@@ -167,6 +167,11 @@ TYPE
 		CounterOld : UDINT; (*Data for internal use.*)
 		SysRefParaNew : BOOL; (*Data for internal use.*)
 		SystemReference : MTTransferFcnType; (*Data for internal use.*)
+		PIDParametersLREAL : MTBasicsPIDParametersType; (*Data for internal use.*)
+		PIDOutput : LREAL; (*Data for internal use.*)
+		ProportionalPart : LREAL; (*Data for internal use.*)
+		IntegrationPart : LREAL; (*Data for internal use.*)
+		DerivativePart : LREAL; (*Data for internal use.*)
 	END_STRUCT;
 	MTBasicsPT1InternalType : 	STRUCT  (*Internal variables of function block MTBasicsPT1.*)
 		CycleTime : REAL; (*Task cycle time. Unit: [s].*)
@@ -365,5 +370,11 @@ TYPE
 		SetOutOld : BOOL; (*Data for internal use.*)
 		nTmp : USINT; (*Data for internal use.*)
 		SystemReference : MTTransferFcnType; (*Data for internal use.*)
+	END_STRUCT;
+	MTBasicsPIDParametersType : 	STRUCT  (*PID parameters type.*)
+		Gain : LREAL; (*Proportional gain. Permitted range of values: Gain> 0.*)
+		IntegrationTime : LREAL; (*Integral action time of the integral component. Unit: [s]. Permitted range of values: IntegrationTime = 0s or IntegrationTime >= task cycle time*)
+		DerivativeTime : LREAL; (*Derivative time (derivative action time) of the derivative component. Unit: [s]. Permitted range of values: DerivativeTime >= 0s.*)
+		FilterTime : LREAL; (*Filter time constant of the derivative component. Unit: [s]. Permitted range of values: FilterTime >= 0s.*)
 	END_STRUCT;
 END_TYPE
