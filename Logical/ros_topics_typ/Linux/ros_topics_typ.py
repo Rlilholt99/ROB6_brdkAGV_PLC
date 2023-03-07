@@ -14,6 +14,10 @@ from geometry_msgs.msg import Quaternion, Twist, TransformStamped
 from nav_msgs.msg import Odometry
 
 
+#delete me 
+from std_msgs.msg import String
+
+
 
 __author__ = "buhl@brommeweb.dk (Jacob Buh)"
 
@@ -191,7 +195,7 @@ class motorCtrl(Node):
 
         #rclpy.on_shutdown(self.shutdown)
         self.get_logger().info("Connecting to motor controller ExOs")
-        timer_period = 0.05
+        timer_period = 0.5
         
         
         
@@ -214,6 +218,7 @@ class motorCtrl(Node):
         self.subscription
 
         self.publisher_ = self.create_publisher(Odometry, '/odom', 10)
+        self.publishing = self.create_publisher(String, '/topic', 10)
 
         #self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
         self.timer = self.create_timer(timer_period, self.tester)
@@ -241,6 +246,11 @@ class motorCtrl(Node):
     
     def tester(self):
         print("jeg kører")
+        msg = String()
+        msg.data = 'hello world'
+        self.publishing.publish(msg)
+        self.get_logger().info('Publishing: "%s"' % msg.data)
+
 
     def sendTransform(self, cur_x, cur_y,cur_theta):
         t = TransformStamped()
