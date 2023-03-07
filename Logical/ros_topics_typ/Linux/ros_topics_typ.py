@@ -102,7 +102,7 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         #print("Odemetry has changed")
         # self.ros_topics_typ_datamodel.log.verbose("python dataset odemetry changed!")
         self.ros_topics_typ_datamodel.log.info("on_change: ros_topics_typ_datamodel.odemetry: " + str(self.ros_topics_typ_datamodel.odemetry.value))
-        #self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
+        self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
         #self.node.sendTransform(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
         
 
@@ -221,7 +221,7 @@ class motorCtrl(Node):
         self.publishing = self.create_publisher(String, '/topic', 10)
 
         #self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
-        self.timer = self.create_timer(timer_period, self.tester)
+        #self.timer = self.create_timer(timer_period, self.tester)
         self.br = TransformBroadcaster(self)
 
         self.get_logger().info('max_speed %f' % self.get_parameter('max_speed')._value)
@@ -244,13 +244,13 @@ class motorCtrl(Node):
             angle += 2.0 * pi
         return angle
     
-    def tester(self):
-        print(odometryGlobal[0])
-        msg = String()
-        msg.data = str(odometryGlobal[0])
-        print("still going")
-        self.publishing.publish(msg)
-        self.get_logger().info('Publishing: "%s"' % msg.data)
+    # def tester(self):
+    #     print(odometryGlobal[0])
+    #     msg = String()
+    #     msg.data = str(odometryGlobal[0])
+    #     print("still going")
+    #     self.publishing.publish(msg)
+    #     self.get_logger().info('Publishing: "%s"' % msg.data)
 
 
     def sendTransform(self, cur_x, cur_y,cur_theta):
