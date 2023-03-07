@@ -247,7 +247,7 @@ class motorCtrl(Node):
     def tester(self):
         print("jeg kører")
         msg = String()
-        msg.data = 'hello world'
+        msg.data = String(odometryGlobal[0])
         self.publishing.publish(msg)
         self.get_logger().info('Publishing: "%s"' % msg.data)
 
