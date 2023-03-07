@@ -102,11 +102,11 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         #self.node.sendTransform(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
         
 
-        # odometryGlobal[0] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x
-        # odometryGlobal[1] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y 
-        # odometryGlobal[2] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z 
-        # odometryGlobal[3] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x 
-        # odometryGlobal[4] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z
+        odometryGlobal[0] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x
+        odometryGlobal[1] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y 
+        odometryGlobal[2] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z 
+        odometryGlobal[3] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x 
+        odometryGlobal[4] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z
 
 
 class exOsThread (threading.Thread):
@@ -191,6 +191,8 @@ class motorCtrl(Node):
 
         #rclpy.on_shutdown(self.shutdown)
         self.get_logger().info("Connecting to motor controller ExOs")
+        timer_period = 0.05
+        self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
         
         
         
