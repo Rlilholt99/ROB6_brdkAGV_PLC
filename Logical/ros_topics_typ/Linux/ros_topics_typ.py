@@ -173,7 +173,7 @@ class exOsThread (threading.Thread):
             nowtime = time.time_ns()
             if gUpdateTwist:
                 gUpdateTwist = False
-                motorCtrl.publish_odom(odometryGlobal[0],odometryGlobal[1], odometryGlobal[2], odometryGlobal[3], odometryGlobal[4])
+                #motorCtrl.publish_odom(odometryGlobal[0],odometryGlobal[1], odometryGlobal[2], odometryGlobal[3], odometryGlobal[4])
                 self.node_.get_logger().info("run, running")
                 #print("Run [ns]: %dms %f %f" %((nowtime-oldtime)/1000000,gTwist.linear.x,gTwist.angular.z))
                 self.sendCmdVel()
