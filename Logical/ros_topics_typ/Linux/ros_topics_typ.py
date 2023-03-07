@@ -95,7 +95,7 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         #print("Odemetry has changed")
         # self.ros_topics_typ_datamodel.log.verbose("python dataset odemetry changed!")
         self.ros_topics_typ_datamodel.log.info("on_change: ros_topics_typ_datamodel.odemetry: " + str(self.ros_topics_typ_datamodel.odemetry.value))
-        self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
+        #self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
         #self.node.sendTransform(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
 class exOsThread (threading.Thread):
     def __init__(self,node):
@@ -105,6 +105,43 @@ class exOsThread (threading.Thread):
         self.handler = ros_topics_typEventHandler(node)
         libros_topics_typ.add_event_handler(self.ros_topics_typ_datamodel, self.handler)
         self.ros_topics_typ_datamodel.connect()
+
+    def publish_odom(self, cur_x, cur_y, cur_theta, vx, vth):
+        try:
+            quat = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
+            
+            #self.sendTransform(cur_x,cur_y,cur_theta)
+            #print(str(quat))
+            
+            odom = Odometry()
+            odom.header.stamp = self.get_clock().now().to_msg()
+            odom.header.frame_id = 'odom'
+            odom.pose.pose.position.x = cur_x
+            odom.pose.pose.position.y = cur_y
+            odom.pose.pose.position.z = 0.0
+            odom.pose.pose.orientation.x = float(quat[0])     
+            odom.pose.pose.orientation.y = float(quat[1])     
+            odom.pose.pose.orientation.z = float(quat[2])     
+            odom.pose.pose.orientation.w = float(quat[3])     
+            
+           
+          
+            odom.pose.covariance[0] = 0.01
+            odom.pose.covariance[7] = 0.01
+            odom.pose.covariance[14] = 99999
+            odom.pose.covariance[21] = 99999
+            odom.pose.covariance[28] = 99999
+            odom.pose.covariance[35] = 0.01
+            
+            odom.child_frame_id = 'base_link'
+            odom.twist.twist.linear.x = vx
+            odom.twist.twist.linear.y = 0.0
+            odom.twist.twist.angular.z = vth
+            odom.twist.covariance = odom.pose.covariance
+            self.publisher_.publish(odom)
+       
+        except Exception as e:
+            print(traceback.format_exc())
     
     def sendCmdVel(self):
         global gTwist
@@ -123,11 +160,16 @@ class exOsThread (threading.Thread):
             nowtime = time.time_ns()
             if gUpdateTwist:
                 gUpdateTwist = False
+                self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z)
                 #print("Run [ns]: %dms %f %f" %((nowtime-oldtime)/1000000,gTwist.linear.x,gTwist.angular.z))
                 self.sendCmdVel()
             self.ros_topics_typ_datamodel.process()
             oldtime = nowtime
             
+            
+
+
+
             
 class motorCtrl(Node):
     def __init__(self):
