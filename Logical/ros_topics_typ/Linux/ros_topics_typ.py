@@ -106,11 +106,11 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         #self.node.sendTransform(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
         
 
-        odometryGlobal[0] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x
-        odometryGlobal[1] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y 
-        odometryGlobal[2] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z 
-        odometryGlobal[3] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x 
-        odometryGlobal[4] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z
+        # odometryGlobal[0] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x
+        # odometryGlobal[1] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y 
+        # odometryGlobal[2] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z 
+        # odometryGlobal[3] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x 
+        # odometryGlobal[4] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z
 
 
 class exOsThread (threading.Thread):
@@ -218,7 +218,7 @@ class motorCtrl(Node):
         self.subscription
 
         self.publisher_ = self.create_publisher(Odometry, '/odom', 10)
-        self.publishing = self.create_publisher(String, '/topic', 10)
+        #self.publishing = self.create_publisher(String, '/topic', 10)
 
         #self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
         #self.timer = self.create_timer(timer_period, self.tester)
@@ -255,32 +255,32 @@ class motorCtrl(Node):
 
 
 
-    # def sendTransform(self, cur_x, cur_y,cur_theta):
-    #     t = TransformStamped()
+    def sendTransform(self, cur_x, cur_y,cur_theta):
+        t = TransformStamped()
 
-    #     # Read message content and assign it to
-    #     # corresponding tf variables
-    #     t.header.stamp = self.get_clock().now().to_msg()
-    #     t.child_frame_id = 'odom'
-    #     t.header.frame_id = 'base_link'
+        # Read message content and assign it to
+        # corresponding tf variables
+        t.header.stamp = self.get_clock().now().to_msg()
+        t.child_frame_id = 'odom'
+        t.header.frame_id = 'base_link'
 
-    #     # Turtle only exists in 2D, thus we get x and y translation
-    #     # coordinates from the message and set the z coordinate to 0
-    #     t.transform.translation.x = cur_x
-    #     t.transform.translation.y = cur_y
-    #     t.transform.translation.z = 0.0
+        # Turtle only exists in 2D, thus we get x and y translation
+        # coordinates from the message and set the z coordinate to 0
+        t.transform.translation.x = cur_x
+        t.transform.translation.y = cur_y
+        t.transform.translation.z = 0.0
 
-    #     # For the same reason, turtle can only rotate around one axis
-    #     # and this why we set rotation in x and y to 0 and obtain
-    #     # rotation in z axis from the message
-    #     q = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
-    #     t.transform.rotation.x = float(q[0])
-    #     t.transform.rotation.y = float(q[1])
-    #     t.transform.rotation.z = float(q[2])
-    #     t.transform.rotation.w = float(q[3])
+        # For the same reason, turtle can only rotate around one axis
+        # and this why we set rotation in x and y to 0 and obtain
+        # rotation in z axis from the message
+        q = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
+        t.transform.rotation.x = float(q[0])
+        t.transform.rotation.y = float(q[1])
+        t.transform.rotation.z = float(q[2])
+        t.transform.rotation.w = float(q[3])
 
-    #     # Send the transformation
-    #     self.br.sendTransform(t)
+        # Send the transformation
+        self.br.sendTransform(t)
 
     def publish_odom(self, cur_x, cur_y, cur_theta, vx, vth):
         try:
@@ -315,7 +315,35 @@ class motorCtrl(Node):
             odom.twist.twist.angular.z = 0.0 #vth
             odom.twist.covariance = odom.pose.covariance
             self.publisher_.publish(odom)
-       
+
+
+#dirty fix
+            t = TransformStamped()
+
+            # Read message content and assign it to
+            # corresponding tf variables
+            t.header.stamp = self.get_clock().now().to_msg()
+            t.child_frame_id = 'odom'
+            t.header.frame_id = 'base_link'
+
+            # Turtle only exists in 2D, thus we get x and y translation
+            # coordinates from the message and set the z coordinate to 0
+            t.transform.translation.x = cur_x
+            t.transform.translation.y = cur_y
+            t.transform.translation.z = 0.0
+
+            # For the same reason, turtle can only rotate around one axis
+            # and this why we set rotation in x and y to 0 and obtain
+            # rotation in z axis from the message
+            
+            t.transform.rotation.x = float(quat[0])
+            t.transform.rotation.y = float(quat[1])
+            t.transform.rotation.z = float(quat[2])
+            t.transform.rotation.w = float(quat[3])
+
+            # Send the transformation
+            self.br.sendTransform(t)
+#end of dirty fix       
         except Exception as e:
             print(traceback.format_exc())
              
