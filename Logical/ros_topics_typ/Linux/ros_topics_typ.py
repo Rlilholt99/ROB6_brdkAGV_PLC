@@ -250,8 +250,8 @@ class motorCtrl(Node):
 
     def publish_odom(self, cur_x, cur_y, cur_theta):#, vx, vth
         try:
-            
-            quat = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
+            cur_theta_neg = -cur_theta
+            quat = tf_transformations.quaternion_from_euler(0, 0, cur_theta_neg)
             
             #self.sendTransform(cur_x,cur_y,cur_theta)
             #print(str(quat))
