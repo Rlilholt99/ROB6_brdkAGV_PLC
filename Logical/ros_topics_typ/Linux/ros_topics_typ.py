@@ -65,6 +65,8 @@ dataset config:
 """
 gUpdateTwist = False
 gTwist = Twist()
+
+odometryGlobal = [0,0,0,0,0]
  
 class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
 
@@ -95,8 +97,18 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         #print("Odemetry has changed")
         # self.ros_topics_typ_datamodel.log.verbose("python dataset odemetry changed!")
         self.ros_topics_typ_datamodel.log.info("on_change: ros_topics_typ_datamodel.odemetry: " + str(self.ros_topics_typ_datamodel.odemetry.value))
-        #self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
+        self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
         #self.node.sendTransform(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
+        
+
+        #for i in range (0,4)
+        odometryGlobal[0] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x
+        odometryGlobal[1] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y 
+        odometryGlobal[2] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z 
+        odometryGlobal[3] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x 
+        odometryGlobal[4] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z
+
+
 class exOsThread (threading.Thread):
     def __init__(self,node):
         self.node_ = node;
@@ -154,13 +166,13 @@ class exOsThread (threading.Thread):
             self.node_.get_logger().info("Not connected to PLC")
             
     def run (self):
-        global gUpdateTwist
+        global gUpdateTwist, odometryGlobal
         oldtime = 0
         while(True):
             nowtime = time.time_ns()
             if gUpdateTwist:
                 gUpdateTwist = False
-                self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z)
+                self.publish_odom(odometryGlobal[0],odometryGlobal[1], odometryGlobal[2], odometryGlobal[3], odometryGlobal[4])
                 #print("Run [ns]: %dms %f %f" %((nowtime-oldtime)/1000000,gTwist.linear.x,gTwist.angular.z))
                 self.sendCmdVel()
             self.ros_topics_typ_datamodel.process()
@@ -170,7 +182,7 @@ class exOsThread (threading.Thread):
 
 
 
-            
+
 class motorCtrl(Node):
     def __init__(self):
         super().__init__('motor_control_exos')
