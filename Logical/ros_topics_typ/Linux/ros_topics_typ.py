@@ -10,7 +10,7 @@ import rclpy
 from rclpy.node import Node
 from tf2_ros import TransformBroadcaster
 import tf_transformations
-from geometry_msgs.msg import Quaternion, Twist
+from geometry_msgs.msg import Quaternion, Twist, TransformStamped
 from nav_msgs.msg import Odometry
 
 
@@ -72,7 +72,7 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         libros_topics_typ.ros_topics_typEventHandler.__init__(self)
         self.node = node
         self.node.get_logger().info("Init ExOs eventhandler");
-        self.node.get_logger().info("Test 3");
+        self.node.get_logger().info("Test 6");
 
     def on_connected(self):
         self.ros_topics_typ_datamodel.log.success("python ros_topics_typ_datamodel connected!")
@@ -96,7 +96,7 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         # self.ros_topics_typ_datamodel.log.verbose("python dataset odemetry changed!")
         self.ros_topics_typ_datamodel.log.info("on_change: ros_topics_typ_datamodel.odemetry: " + str(self.ros_topics_typ_datamodel.odemetry.value))
         self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
-
+        #self.node.sendTransform(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
 class exOsThread (threading.Thread):
     def __init__(self,node):
         self.node_ = node;
@@ -143,8 +143,8 @@ class motorCtrl(Node):
             parameters=[
                 ('min_speed', -3),
                 ('max_speed', 3),
-                ('ticks_per_meter', 0),
-                ('base_width', 0.53),
+                ('ticks_per_meter', 105860),
+                ('base_width', 0.355),
                 ('vel_topic', 'cmd_vel')
             ]
         )
@@ -185,8 +185,8 @@ class motorCtrl(Node):
         # Read message content and assign it to
         # corresponding tf variables
         t.header.stamp = self.get_clock().now().to_msg()
-        t.header.frame_id = 'base_link'
         t.child_frame_id = 'odom'
+        t.header.frame_id = 'base_link'
 
         # Turtle only exists in 2D, thus we get x and y translation
         # coordinates from the message and set the z coordinate to 0
@@ -198,10 +198,10 @@ class motorCtrl(Node):
         # and this why we set rotation in x and y to 0 and obtain
         # rotation in z axis from the message
         q = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
-        t.transform.rotation.x = q[0]
-        t.transform.rotation.y = q[1]
-        t.transform.rotation.z = q[2]
-        t.transform.rotation.w = q[3]
+        t.transform.rotation.x = float(q[0])
+        t.transform.rotation.y = float(q[1])
+        t.transform.rotation.z = float(q[2])
+        t.transform.rotation.w = float(q[3])
 
         # Send the transformation
         self.br.sendTransform(t)
@@ -210,7 +210,7 @@ class motorCtrl(Node):
         try:
             quat = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
             
-            # self.sendTransform(cur_x,cur_y,cur_theta)
+            #self.sendTransform(cur_x,cur_y,cur_theta)
             #print(str(quat))
             
             odom = Odometry()

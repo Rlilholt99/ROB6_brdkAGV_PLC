@@ -2,10 +2,11 @@
 
 PROGRAM _INIT
 	FOR camIdx := 0 TO MAX_NUM_CAMS DO
-		imageRequested[camIdx] := FALSE;
+		imageRequested := FALSE;
 		requestTimeStamp := 0;
 		durationToCamera := 0;
-		resultReady[camIdx] := FALSE;
+		resultReady := FALSE;
+		imgProcessed := TRUE;
 	END_FOR
 	
 	gVisionNettime.CMD.Activate := TRUE;
@@ -14,16 +15,11 @@ PROGRAM _INIT
 	gVisionNettime.CFG.VisionPreTrigger_Cycles:= 8;
 	
 	
-	hwCam.out.par.gainLevel := 1;
-	hwCam.out.par.flashColor := BRDKVIBASE_CAM_LED_GREEN;
-	hwCam.out.par.exposureTime := 1000;
-	hwCam.out.par.focus := 5000;
+
 	
-		gVisionImage.CFG.EthDevice := 'IF2';
-		gVisionSensor[0].CFG.VisionFunction := enumBlob;
-		gVisionSensor[0].CFG.PowerlinkNode := 1;
-		gVisionSensor[0].CFG.DataStructure := ADR(gBlob);
-		gVisionSensor[0].CFG.ComponentLink := gCamera;
+	
+	runOnce := TRUE;
+	
 //	
 //	mappView.enable := TRUE;
 //	mappView.getImageArray := FALSE;

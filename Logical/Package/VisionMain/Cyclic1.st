@@ -3,21 +3,78 @@ PROGRAM _CYCLIC
     
 //	
 
-//	 
+
+
+	
+	gVisionImage.CFG.EthDevice := 'IF2';
+	gVisionSensor[0].CFG.VisionFunction := enumBlob;
+	gVisionSensor[0].CFG.PowerlinkNode := 1;
+	gVisionSensor[0].CFG.DataStructure := ADR(gBlob);
+	gVisionSensor[0].CFG.ComponentLink := gCamera;
 //
 //	
 //	
+	
+	hwBlob.out.common.enable := TRUE;
+	hwBlob.out.common.numSearchMax := 1;
+	hwBlob.out.enhancedBlobInformation := TRUE;
+	hwBlob.out.regionFeatures := TRUE;
+	hwBlob.out.common.alignment := 0;
+	hwBlob.out.common.offsetROI.orientation := 0;
+	hwBlob.out.common.offsetROI.rotCenterX := 0;
+	hwBlob.out.common.offsetROI.rotCenterY := 0;
+	hwBlob.out.common.offsetROI.x := 0; 
+	hwBlob.out.common.offsetROI.y := 0;
+	hwCam.out.par.focus := 30000;
+	hwCam.out.par.flashColor := 99;
+	hwCam.out.par.flashSegment := 15;
+	hwCam.out.par.exposureTime := 1000;
+	imgTrig.pCameraHw := ADR(hwCam);
+	
+	// alt dette burde køre under en specific condiotion
 //	
-//	hwBlob.out.common.enable := TRUE;
-//	hwBlob.out.common.numSearchMax := 1;
-//	hwBlob.out.common.alignment := 0;
-//	hwBlob.out.common.offsetROI.orientation := 0;
-//	hwBlob.out.common.offsetROI.rotCenterX := 0;
-//	hwBlob.out.common.offsetROI.rotCenterY := 0;
-//	hwBlob.out.common.offsetROI.x := 0; 
-//	hwBlob.out.common.offsetROI.y := 0;
+	IF hwCam.in.status.imageAcquisitionReady AND imgProcessed AND NOT hwCam.in.status.imageProcessingActive THEN
+		imgTrig.trigger := TRUE;
+//		imgProcessed := FALSE;
+
+//		IF NOT hwCam.in.status.imageProcessingActive THEN
+				
+			IF hwBlob.in.common.numResults <> 0 THEN
+				minYPos := hwBlob.in.results.yMin/100;
+				minXPos := hwBlob.in.results.xMin/100;
+				maxYPos := hwBlob.in.results.yMax/100;
+				maxXPos := hwBlob.in.results.xMax/100;
+				testMean := hwBlob.in.results.meanGreyValue;
+				middleY := (minYPos + maxYPos)/2;
+				middleX := (minXPos + maxXPos)/2;
+				middleErr := middleX - 640;
+				
+				
+				IF (middleErr > 0) THEN
+					test := 1;
+					
+				ELSIF (middleErr < 0) THEN
+					test := -1;
+				ELSE
+					test := 0;
+				END_IF
+//				imgProcessed := TRUE;
+			END_IF
+//		END_IF
+		
+	END_IF
 	
-	
+//	CASE OF visState OF
+//		0:
+//			IF EDGEPOS(imageRequested) THEN
+//				requestTimeStamp := NettimeCurrent_us;
+//				
+//				resultReady := FALSE;
+//				
+//				visState := 10;
+//				
+//		10:
+
 //	
 //	IF gVisionNettime.CMD.Activate THEN
 //		//imgTrig.pCameraHw := ADR(hwCam);
@@ -111,7 +168,7 @@ PROGRAM _CYCLIC
 		//mappView();
 			
 		//TOF_Light();
-		//imgTrig();
+		imgTrig();
 	//END_IF
 
 END_PROGRAM

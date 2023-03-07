@@ -10,9 +10,10 @@ VAR
 	NettimeCurrent_us : DINT; (*Current Powerlink nettime*)
 END_VAR
 VAR RETAIN
-	(*
-	RecipeData : recVariable; (*Structure that contains the recipe variables*)
+	Recipedata : recVariable;
 END_VAR
+(*
+	RecipeData : recVariable; (*Structure that contains the recipe variables*)
 (*-----------------------------------------------------------------------------------------------------------------------------------------*)
 (*Global constants*)
 VAR CONSTANT

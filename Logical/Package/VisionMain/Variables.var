@@ -1,10 +1,13 @@
 VAR
-	imageRequested : ARRAY[0..MAX_NUM_CAMS] OF BOOL;
-	resultReady : ARRAY[0..MAX_NUM_CAMS] OF BOOL;
+	testMean : USINT;
+	runOnce : BOOL;
+	imageRequested : BOOL;
+	resultReady : BOOL;
 	PowerlinkCycle_us : DINT;
 	durationToCamera : DINT;
 	requestTimeStamp : DINT;
 	viStates : ARRAY[0..MAX_NUM_CAMS] OF USINT;
+	imgProcessed : BOOL;
 	hwBlob : brdkViBase_hw_blob_1_typ;
 	imgTrig : brdkViBase_imgTrigger;
 	mappView : brdkViImg_mappView;
@@ -18,4 +21,11 @@ VAR
 	shapeCenterPoint : brdkViBase_2d_typ;
 	overlay : STRING[6000000];
 	additionArguments : STRING[80];
+	maxYPos : DINT;
+	middleY : DINT;
+	middleX : DINT;
+	maxXPos : DINT;
+	minYPos : DINT;
+	minXPos : DINT;
+	middleErr : DINT;
 END_VAR

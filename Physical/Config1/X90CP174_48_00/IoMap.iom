@@ -72,4 +72,9 @@ VAR_CONFIG
 	::VisionMain:hwBlob.out.common.offsetROI.rotCenterX AT %QD."VSS112R22.051P-000".OffsetRoiRotationCenterX;
 	::VisionMain:hwBlob.out.common.offsetROI.rotCenterY AT %QD."VSS112R22.051P-000".OffsetRoiRotationCenterY;
 	::VisionMain:hwBlob.in.results.xMin AT %ID."VSS112R22.051P-000".BlobXMin01;
+	::VisionMain:hwBlob.in.results.meanGreyValue AT %IB."VSS112R22.051P-000".MeanValue01;
+	::VisionMain:hwBlob.in.results.xMax AT %ID."VSS112R22.051P-000".BlobXMax01;
+	::VisionMain:hwBlob.in.results.yMin AT %ID."VSS112R22.051P-000".BlobYMin01;
+	::VisionMain:hwBlob.in.results.yMax AT %ID."VSS112R22.051P-000".BlobYMax01;
+	::VisionMain:hwBlob.in.common.numResults AT %IB."VSS112R22.051P-000".NumRes;
 END_VAR
