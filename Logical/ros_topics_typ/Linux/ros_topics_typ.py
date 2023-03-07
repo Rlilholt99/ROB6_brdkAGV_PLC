@@ -67,6 +67,7 @@ gUpdateTwist = False
 gTwist = Twist()
 
 odometryGlobal = [0,0,0,0,0]
+clock = 1678190064.848563021
  
 class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
 
@@ -97,19 +98,19 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         #print("Odemetry has changed")
         # self.ros_topics_typ_datamodel.log.verbose("python dataset odemetry changed!")
         self.ros_topics_typ_datamodel.log.info("on_change: ros_topics_typ_datamodel.odemetry: " + str(self.ros_topics_typ_datamodel.odemetry.value))
-        self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
+        #self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
         #self.node.sendTransform(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
         
 
-        #for i in range (0,4)
-        odometryGlobal[0] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x
-        odometryGlobal[1] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y 
-        odometryGlobal[2] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z 
-        odometryGlobal[3] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x 
-        odometryGlobal[4] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z
+        # odometryGlobal[0] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x
+        # odometryGlobal[1] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y 
+        # odometryGlobal[2] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z 
+        # odometryGlobal[3] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x 
+        # odometryGlobal[4] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z
 
 
 class exOsThread (threading.Thread):
+
     def __init__(self,node):
         self.node_ = node;
         threading.Thread.__init__(self)
@@ -118,42 +119,42 @@ class exOsThread (threading.Thread):
         libros_topics_typ.add_event_handler(self.ros_topics_typ_datamodel, self.handler)
         self.ros_topics_typ_datamodel.connect()
 
-    def publish_odom(self, cur_x, cur_y, cur_theta, vx, vth):
-        try:
-            quat = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
+    # def publish_odom(self, cur_x, cur_y, cur_theta, vx, vth):
+    #     try:
+    #         quat = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
             
-            #self.sendTransform(cur_x,cur_y,cur_theta)
-            #print(str(quat))
+    #         #self.sendTransform(cur_x,cur_y,cur_theta)
+    #         #print(str(quat))
             
-            odom = Odometry()
-            odom.header.stamp = self.get_clock().now().to_msg()
-            odom.header.frame_id = 'odom'
-            odom.pose.pose.position.x = cur_x
-            odom.pose.pose.position.y = cur_y
-            odom.pose.pose.position.z = 0.0
-            odom.pose.pose.orientation.x = float(quat[0])     
-            odom.pose.pose.orientation.y = float(quat[1])     
-            odom.pose.pose.orientation.z = float(quat[2])     
-            odom.pose.pose.orientation.w = float(quat[3])     
+    #         odom = Odometry()
+    #         odom.header.stamp = self.get_clock().now().to_msg()
+    #         odom.header.frame_id = 'odom'
+    #         odom.pose.pose.position.x = cur_x
+    #         odom.pose.pose.position.y = cur_y
+    #         odom.pose.pose.position.z = 0.0
+    #         odom.pose.pose.orientation.x = float(quat[0])     
+    #         odom.pose.pose.orientation.y = float(quat[1])     
+    #         odom.pose.pose.orientation.z = float(quat[2])     
+    #         odom.pose.pose.orientation.w = float(quat[3])     
             
            
           
-            odom.pose.covariance[0] = 0.01
-            odom.pose.covariance[7] = 0.01
-            odom.pose.covariance[14] = 99999
-            odom.pose.covariance[21] = 99999
-            odom.pose.covariance[28] = 99999
-            odom.pose.covariance[35] = 0.01
+    #         odom.pose.covariance[0] = 0.01
+    #         odom.pose.covariance[7] = 0.01
+    #         odom.pose.covariance[14] = 99999
+    #         odom.pose.covariance[21] = 99999
+    #         odom.pose.covariance[28] = 99999
+    #         odom.pose.covariance[35] = 0.01
             
-            odom.child_frame_id = 'base_link'
-            odom.twist.twist.linear.x = vx
-            odom.twist.twist.linear.y = 0.0
-            odom.twist.twist.angular.z = vth
-            odom.twist.covariance = odom.pose.covariance
-            self.publisher_.publish(odom)
+    #         odom.child_frame_id = 'base_link'
+    #         odom.twist.twist.linear.x = vx
+    #         odom.twist.twist.linear.y = 0.0
+    #         odom.twist.twist.angular.z = vth
+    #         odom.twist.covariance = odom.pose.covariance
+    #         self.publisher_.publish(odom)
        
-        except Exception as e:
-            print(traceback.format_exc())
+    #     except Exception as e:
+    #         print(traceback.format_exc())
     
     def sendCmdVel(self):
         global gTwist
@@ -172,7 +173,8 @@ class exOsThread (threading.Thread):
             nowtime = time.time_ns()
             if gUpdateTwist:
                 gUpdateTwist = False
-                self.publish_odom(odometryGlobal[0],odometryGlobal[1], odometryGlobal[2], odometryGlobal[3], odometryGlobal[4])
+                motorCtrl.node.publish_odom(odometryGlobal[0],odometryGlobal[1], odometryGlobal[2], odometryGlobal[3], odometryGlobal[4])
+                self.node_.get_logger().info("run, running")
                 #print("Run [ns]: %dms %f %f" %((nowtime-oldtime)/1000000,gTwist.linear.x,gTwist.angular.z))
                 self.sendCmdVel()
             self.ros_topics_typ_datamodel.process()
@@ -303,6 +305,8 @@ class motorCtrl(Node):
         gTwist = twist
         gUpdateTwist = True
         #self.exOs.sendCmdVel(twist)
+        self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
+        
 
     # TODO: need clean shutdown so motors stop even if new msgs are arriving
     def destroy_node(self):
