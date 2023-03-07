@@ -215,8 +215,8 @@ class motorCtrl(Node):
 
         self.publisher_ = self.create_publisher(Odometry, '/odom', 10)
 
-        self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
-
+        #self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
+        self.timer = self.create_timer(timer_period, )
         self.br = TransformBroadcaster(self)
 
         self.get_logger().info('max_speed %f' % self.get_parameter('max_speed')._value)
@@ -238,6 +238,9 @@ class motorCtrl(Node):
         while angle < -pi:
             angle += 2.0 * pi
         return angle
+    
+    def tester(self):
+        print("jeg kører")
 
     def sendTransform(self, cur_x, cur_y,cur_theta):
         t = TransformStamped()
