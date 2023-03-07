@@ -306,8 +306,7 @@ class motorCtrl(Node):
         #print('vel_callback %f %f' %(twist.linear.x, twist.angular.z))
         gTwist = twist
         gUpdateTwist = True
-        #self.exOs.sendCmdVel(twist)
-        self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
+        #self.exOs.sendCmdVel(twist) 
         
 
     # TODO: need clean shutdown so motors stop even if new msgs are arriving
