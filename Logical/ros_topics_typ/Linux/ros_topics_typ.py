@@ -258,7 +258,7 @@ class motorCtrl(Node):
             
             odom = Odometry()
             odom.header.stamp = self.get_clock().now().to_msg()
-            odom.header.frame_id = 'odom'
+            odom.header.frame_id = 'base_link'
             odom.pose.pose.position.x = cur_x
             odom.pose.pose.position.y = cur_y
             odom.pose.pose.position.z = 0.0
@@ -276,7 +276,7 @@ class motorCtrl(Node):
             odom.pose.covariance[28] = 99999
             odom.pose.covariance[35] = 0.01
             
-            odom.child_frame_id = 'base_link'
+            odom.child_frame_id = 'odom'
             odom.twist.twist.linear.x = 0.0 #vx
             odom.twist.twist.linear.y = 0.0
             odom.twist.twist.angular.z = 0.0 #vth
@@ -306,7 +306,7 @@ class motorCtrl(Node):
             t.transform.rotation.x = float(quat[0])
             t.transform.rotation.y = float(quat[1])
             t.transform.rotation.z = -float(quat[2])
-            t.transform.rotation.w = float(quat[3])
+            t.transform.rotation.w = -float(quat[3])
 
             # Send the transformation
             self.br.sendTransform(t)
