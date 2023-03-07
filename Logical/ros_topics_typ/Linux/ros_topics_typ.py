@@ -285,31 +285,31 @@ class motorCtrl(Node):
 
 
 #dirty fix
-            t = TransformStamped()
+            # t = TransformStamped()
 
-            # Read message content and assign it to
-            # corresponding tf variables
-            t.header.stamp = self.get_clock().now().to_msg()
-            t.child_frame_id = 'odom'
-            t.header.frame_id = 'base_link'
+            # # Read message content and assign it to
+            # # corresponding tf variables
+            # t.header.stamp = self.get_clock().now().to_msg()
+            # t.child_frame_id = 'odom'
+            # t.header.frame_id = 'base_link'
 
-            # Turtle only exists in 2D, thus we get x and y translation
-            # coordinates from the message and set the z coordinate to 0
-            t.transform.translation.x = cur_x
-            t.transform.translation.y = cur_y
-            t.transform.translation.z = 0.0
+            # # Turtle only exists in 2D, thus we get x and y translation
+            # # coordinates from the message and set the z coordinate to 0
+            # t.transform.translation.x = cur_x
+            # t.transform.translation.y = cur_y
+            # t.transform.translation.z = 0.0
 
-            # For the same reason, turtle can only rotate around one axis
-            # and this why we set rotation in x and y to 0 and obtain
-            # rotation in z axis from the message
+            # # For the same reason, turtle can only rotate around one axis
+            # # and this why we set rotation in x and y to 0 and obtain
+            # # rotation in z axis from the message
             
-            t.transform.rotation.x = float(quat[0])
-            t.transform.rotation.y = float(quat[1])
-            t.transform.rotation.z = float(quat[2])
-            t.transform.rotation.w = float(quat[3])
+            # t.transform.rotation.x = float(quat[0])
+            # t.transform.rotation.y = float(quat[1])
+            # t.transform.rotation.z = float(quat[2])
+            # t.transform.rotation.w = float(quat[3])
 
-            # Send the transformation
-            self.br.sendTransform(t)
+            # # Send the transformation
+            # self.br.sendTransform(t)
 #end of dirty fix       
         except Exception as e:
             print(traceback.format_exc())
