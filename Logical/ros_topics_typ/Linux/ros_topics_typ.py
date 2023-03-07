@@ -103,6 +103,7 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         # self.ros_topics_typ_datamodel.log.verbose("python dataset odemetry changed!")
         self.ros_topics_typ_datamodel.log.info("on_change: ros_topics_typ_datamodel.odemetry: " + str(self.ros_topics_typ_datamodel.odemetry.value))
         self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
+        self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
         #self.node.sendTransform(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
         
 
@@ -247,7 +248,7 @@ class motorCtrl(Node):
         self.br.sendTransform(t)
 
 
-    def publish_odom(self, cur_x, cur_y, cur_theta, vx, vth):
+    def publish_odom(self, cur_x, cur_y, cur_theta):#, vx, vth
         try:
             cur_theta_neg = -cur_theta
             quat = tf_transformations.quaternion_from_euler(0, 0, cur_theta_neg)
@@ -276,39 +277,39 @@ class motorCtrl(Node):
             odom.pose.covariance[35] = 0.01
             
             odom.child_frame_id = 'base_link'
-            odom.twist.twist.linear.x = vx
+            odom.twist.twist.linear.x = 0.0 #vx
             odom.twist.twist.linear.y = 0.0
-            odom.twist.twist.angular.z = vth
+            odom.twist.twist.angular.z = 0.0 #vth
             odom.twist.covariance = odom.pose.covariance
             self.publisher_.publish(odom)
 
 
 #dirty fix
-            # t = TransformStamped()
+            t = TransformStamped()
 
-            # # Read message content and assign it to
-            # # corresponding tf variables
-            # t.header.stamp = self.get_clock().now().to_msg()
-            # t.child_frame_id = 'odom'
-            # t.header.frame_id = 'base_link'
+            # Read message content and assign it to
+            # corresponding tf variables
+            t.header.stamp = self.get_clock().now().to_msg()
+            t.child_frame_id = 'odom'
+            t.header.frame_id = 'base_link'
 
-            # # Turtle only exists in 2D, thus we get x and y translation
-            # # coordinates from the message and set the z coordinate to 0
-            # t.transform.translation.x = cur_x
-            # t.transform.translation.y = cur_y
-            # t.transform.translation.z = 0.0
+            # Turtle only exists in 2D, thus we get x and y translation
+            # coordinates from the message and set the z coordinate to 0
+            t.transform.translation.x = cur_x
+            t.transform.translation.y = cur_y
+            t.transform.translation.z = 0.0
 
-            # # For the same reason, turtle can only rotate around one axis
-            # # and this why we set rotation in x and y to 0 and obtain
-            # # rotation in z axis from the message
+            # For the same reason, turtle can only rotate around one axis
+            # and this why we set rotation in x and y to 0 and obtain
+            # rotation in z axis from the message
             
-            # t.transform.rotation.x = float(quat[0])
-            # t.transform.rotation.y = float(quat[1])
-            # t.transform.rotation.z = float(quat[2])
-            # t.transform.rotation.w = float(quat[3])
+            t.transform.rotation.x = float(quat[0])
+            t.transform.rotation.y = float(quat[1])
+            t.transform.rotation.z = float(quat[2])
+            t.transform.rotation.w = float(quat[3])
 
-            # # Send the transformation
-            # self.br.sendTransform(t)
+            # Send the transformation
+            self.br.sendTransform(t)
 #end of dirty fix       
         except Exception as e:
             print(traceback.format_exc())
