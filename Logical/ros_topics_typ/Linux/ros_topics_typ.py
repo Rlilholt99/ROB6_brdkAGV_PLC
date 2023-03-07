@@ -253,36 +253,38 @@ class motorCtrl(Node):
     #     self.get_logger().info('Publishing: "%s"' % msg.data)
 
 
-    def sendTransform(self, cur_x, cur_y,cur_theta):
-        t = TransformStamped()
 
-        # Read message content and assign it to
-        # corresponding tf variables
-        t.header.stamp = self.get_clock().now().to_msg()
-        t.child_frame_id = 'odom'
-        t.header.frame_id = 'base_link'
 
-        # Turtle only exists in 2D, thus we get x and y translation
-        # coordinates from the message and set the z coordinate to 0
-        t.transform.translation.x = cur_x
-        t.transform.translation.y = cur_y
-        t.transform.translation.z = 0.0
+    # def sendTransform(self, cur_x, cur_y,cur_theta):
+    #     t = TransformStamped()
 
-        # For the same reason, turtle can only rotate around one axis
-        # and this why we set rotation in x and y to 0 and obtain
-        # rotation in z axis from the message
-        q = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
-        t.transform.rotation.x = float(q[0])
-        t.transform.rotation.y = float(q[1])
-        t.transform.rotation.z = float(q[2])
-        t.transform.rotation.w = float(q[3])
+    #     # Read message content and assign it to
+    #     # corresponding tf variables
+    #     t.header.stamp = self.get_clock().now().to_msg()
+    #     t.child_frame_id = 'odom'
+    #     t.header.frame_id = 'base_link'
 
-        # Send the transformation
-        self.br.sendTransform(t)
+    #     # Turtle only exists in 2D, thus we get x and y translation
+    #     # coordinates from the message and set the z coordinate to 0
+    #     t.transform.translation.x = cur_x
+    #     t.transform.translation.y = cur_y
+    #     t.transform.translation.z = 0.0
+
+    #     # For the same reason, turtle can only rotate around one axis
+    #     # and this why we set rotation in x and y to 0 and obtain
+    #     # rotation in z axis from the message
+    #     q = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
+    #     t.transform.rotation.x = float(q[0])
+    #     t.transform.rotation.y = float(q[1])
+    #     t.transform.rotation.z = float(q[2])
+    #     t.transform.rotation.w = float(q[3])
+
+    #     # Send the transformation
+    #     self.br.sendTransform(t)
 
     def publish_odom(self, cur_x, cur_y, cur_theta, vx, vth):
         try:
-            quat = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
+            quat = tf_transformations.quaternion_from_euler(0, 0, -cur_theta)
             
             #self.sendTransform(cur_x,cur_y,cur_theta)
             #print(str(quat))
@@ -308,9 +310,9 @@ class motorCtrl(Node):
             odom.pose.covariance[35] = 0.01
             
             odom.child_frame_id = 'base_link'
-            odom.twist.twist.linear.x = vx
+            odom.twist.twist.linear.x = 0.0 #vx
             odom.twist.twist.linear.y = 0.0
-            odom.twist.twist.angular.z = vth
+            odom.twist.twist.angular.z = 0.0 #vth
             odom.twist.covariance = odom.pose.covariance
             self.publisher_.publish(odom)
        
