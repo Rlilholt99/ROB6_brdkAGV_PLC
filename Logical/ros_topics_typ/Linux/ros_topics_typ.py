@@ -66,7 +66,7 @@ dataset config:
 gUpdateTwist = False
 gTwist = Twist()
 
-odometryGlobal = [0,0,0,0,0]
+odometryGlobal = [float(0),float(0),float(0),float(0),float(0)]
 clock = 1678190064.848563021
  
 class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
