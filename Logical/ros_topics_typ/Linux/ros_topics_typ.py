@@ -305,8 +305,8 @@ class motorCtrl(Node):
             
             t.transform.rotation.x = float(quat[0])
             t.transform.rotation.y = float(quat[1])
-            t.transform.rotation.z = -float(quat[2])
-            t.transform.rotation.w = -float(quat[3])
+            t.transform.rotation.z = float(quat[2])
+            t.transform.rotation.w = float(quat[3])
 
             # Send the transformation
             self.br.sendTransform(t)
