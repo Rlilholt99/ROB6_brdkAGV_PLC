@@ -192,7 +192,7 @@ class motorCtrl(Node):
         #rclpy.on_shutdown(self.shutdown)
         self.get_logger().info("Connecting to motor controller ExOs")
         timer_period = 0.05
-        self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
+        
         
         
         
@@ -214,6 +214,8 @@ class motorCtrl(Node):
         self.subscription
 
         self.publisher_ = self.create_publisher(Odometry, '/odom', 10)
+
+        self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
 
         self.br = TransformBroadcaster(self)
 
