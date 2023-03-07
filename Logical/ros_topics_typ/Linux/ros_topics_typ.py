@@ -168,8 +168,8 @@ class motorCtrl(Node):
         self.declare_parameters(
             namespace='',
             parameters=[
-                ('min_speed', -3),
-                ('max_speed', 3),
+                ('min_speed', -0.2),
+                ('max_speed', 0.2),
                 ('ticks_per_meter', 105860),
                 ('base_width', 0.355),
                 ('vel_topic', 'cmd_vel')
