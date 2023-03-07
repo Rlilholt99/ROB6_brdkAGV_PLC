@@ -216,7 +216,7 @@ class motorCtrl(Node):
         self.publisher_ = self.create_publisher(Odometry, '/odom', 10)
 
         #self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
-        self.timer = self.create_timer(timer_period, )
+        self.timer = self.create_timer(timer_period, self.tester)
         self.br = TransformBroadcaster(self)
 
         self.get_logger().info('max_speed %f' % self.get_parameter('max_speed')._value)
