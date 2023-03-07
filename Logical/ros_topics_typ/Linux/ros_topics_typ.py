@@ -195,7 +195,6 @@ class motorCtrl(Node):
 
         #rclpy.on_shutdown(self.shutdown)
         self.get_logger().info("Connecting to motor controller ExOs")
-        timer_period = 0.5
         
         
         
@@ -282,7 +281,7 @@ class motorCtrl(Node):
         # Send the transformation
         self.br.sendTransform(t)
 
-    def publish_odom(self, cur_x, cur_y, cur_theta, vx, vth):
+    def publish_odom(self, cur_x, cur_y, cur_theta):#, vx, vth
         try:
             quat = tf_transformations.quaternion_from_euler(0, 0, -cur_theta)
             
