@@ -244,7 +244,7 @@ class motorCtrl(Node):
             angle += 2.0 * pi
         return angle
     
-    def tester(self,):
+    def tester(self):
         print(odometryGlobal[0])
         msg = String()
         msg.data = str(odometryGlobal[0])
