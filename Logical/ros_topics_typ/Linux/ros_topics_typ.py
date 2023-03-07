@@ -102,7 +102,7 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         #print("Odemetry has changed")
         # self.ros_topics_typ_datamodel.log.verbose("python dataset odemetry changed!")
         self.ros_topics_typ_datamodel.log.info("on_change: ros_topics_typ_datamodel.odemetry: " + str(self.ros_topics_typ_datamodel.odemetry.value))
-        self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
+        #self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
         self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
         #self.node.sendTransform(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
         
