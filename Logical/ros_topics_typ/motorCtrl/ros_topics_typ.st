@@ -247,7 +247,7 @@ PROGRAM _CYCLIC
 		ros.cur_x := ros.cur_x + ros.dist * COS(ros.cur_theta);
 		ros.cur_y := ros.cur_y + ros.dist * SIN(ros.cur_theta);
 	ELSE
-		ros.d_theta := (localVariables[1].distance - localVariables[0].distance) / ros.topics.config.baseWidth;
+		ros.d_theta := -(localVariables[1].distance - localVariables[0].distance) / ros.topics.config.baseWidth;
 		ros.dist := (localVariables[1].distance+localVariables[0].distance)/2;
 		ros.r := ros.dist / ros.d_theta;
 		ros.cur_x := ros.cur_x + ros.r * (SIN(ros.d_theta + ros.cur_theta) - SIN(ros.cur_theta));

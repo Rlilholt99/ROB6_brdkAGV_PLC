@@ -168,10 +168,10 @@ class motorCtrl(Node):
         self.declare_parameters(
             namespace='',
             parameters=[
-                ('min_speed', -0.2),
-                ('max_speed', 0.2),
-                ('ticks_per_meter', 105860),
-                ('base_width', 0.355),
+                ('min_speed', -0.2), #m/s
+                ('max_speed', 0.2), #m/s
+                ('ticks_per_meter', 105860), #encoder ticks per meter driven 
+                ('base_width', 0.275), #distance between the middle of the wheels in meters
                 ('vel_topic', 'cmd_vel')
             ]
         )
@@ -258,9 +258,9 @@ class motorCtrl(Node):
             
             odom = Odometry()
             odom.header.stamp = self.get_clock().now().to_msg()
-            odom.header.frame_id = 'base_link'
+            odom.header.frame_id = 'odom'
             odom.pose.pose.position.x = cur_x
-            odom.pose.pose.position.y = -cur_y
+            odom.pose.pose.position.y = cur_y
             odom.pose.pose.position.z = 0.0
             odom.pose.pose.orientation.x = float(quat[0])     
             odom.pose.pose.orientation.y = float(quat[1])     
@@ -276,7 +276,7 @@ class motorCtrl(Node):
             odom.pose.covariance[28] = 99999
             odom.pose.covariance[35] = 0.01
             
-            odom.child_frame_id = 'odom'
+            odom.child_frame_id = 'base_link'
             odom.twist.twist.linear.x = 0.0 #vx
             odom.twist.twist.linear.y = 0.0
             odom.twist.twist.angular.z = 0.0 #vth
@@ -290,8 +290,8 @@ class motorCtrl(Node):
             # Read message content and assign it to
             # corresponding tf variables
             t.header.stamp = self.get_clock().now().to_msg()
-            t.header.frame_id = 'base_link'
-            t.child_frame_id = 'odom'
+            t.header.frame_id = 'odom'
+            t.child_frame_id = 'base_link'
             
 
             # Turtle only exists in 2D, thus we get x and y translation
