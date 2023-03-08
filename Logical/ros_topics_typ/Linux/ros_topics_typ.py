@@ -182,7 +182,7 @@ class motorCtrl(Node):
         self.subscription = self.create_subscription(Twist,self.VEL_TOPIC, self.vel_callback,0)
         self.subscription
 
-        self.publisher_ = self.create_publisher(Odometry, '/dead_rekoning', 10)
+        self.publisher_ = self.create_publisher(Odometry, '/odom', 10)
         #self.publishing = self.create_publisher(String, '/topic', 10)
 
         #self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
@@ -285,7 +285,7 @@ class motorCtrl(Node):
 
 
 #dirty fix
-            t = TransformStamped()
+            #t = TransformStamped()
 
             # # Read message content and assign it to
             # # corresponding tf variables
