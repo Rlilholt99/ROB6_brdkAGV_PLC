@@ -1,4 +1,5 @@
 VAR
 	lineMode : BOOL;
+	drejMere : REAL;
 	Test2 : INT;
 END_VAR

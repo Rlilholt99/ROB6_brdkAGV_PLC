@@ -5,7 +5,7 @@ PROGRAM _CYCLIC
 
 
 
-	
+	positionPID();
 	gVisionImage.CFG.EthDevice := 'IF2';
 	gVisionSensor[0].CFG.VisionFunction := enumBlob;
 	gVisionSensor[0].CFG.PowerlinkNode := 1;
@@ -49,16 +49,20 @@ PROGRAM _CYCLIC
 				middleX := (minXPos + maxXPos)/2;
 				middleErr := middleX - 640;
 				
-				
-				IF (middleErr > 0) THEN
-					test := 1;
-					
-				ELSIF (middleErr < 0) THEN
-					test := -1;
+				positionPID.ActValue := DINT_TO_REAL(middleErr);
+				positionPID.SetValue := 0;
+				IF (middleErr > 25) THEN
+				Test2 := 1;
+				drejMere := positionPID.Out;
+				ELSIF (middleErr < -25) THEN
+				Test2 := -1;
+				drejMere := positionPID.Out;
 				ELSE
-					test := 0;
+					Test2 := 0;
 				END_IF
-//				imgProcessed := TRUE;
+			//				imgProcessed := TRUE;
+			ELSE
+			Test2 := 10;
 			END_IF
 		//		END_IF
 		

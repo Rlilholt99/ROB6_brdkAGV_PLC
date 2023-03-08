@@ -7,6 +7,7 @@ VAR
 	durationToCamera : DINT;
 	requestTimeStamp : DINT;
 	viStates : ARRAY[0..MAX_NUM_CAMS] OF USINT;
+	positionPID : MTBasicsPID;
 	imgProcessed : BOOL;
 	hwBlob : brdkViBase_hw_blob_1_typ;
 	imgTrig : brdkViBase_imgTrigger;
