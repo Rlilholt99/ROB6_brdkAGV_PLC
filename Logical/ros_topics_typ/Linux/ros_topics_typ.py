@@ -171,7 +171,7 @@ class motorCtrl(Node):
                 ('min_speed', -0.2), #m/s
                 ('max_speed', 0.2), #m/s
                 ('ticks_per_meter', 105860), #encoder ticks per meter driven 
-                ('base_width', 0.269), #distance between the middle of the wheels in meters
+                ('base_width', 0.271), #distance between the middle of the wheels in meters
                 ('vel_topic', 'cmd_vel')
             ]
         )
