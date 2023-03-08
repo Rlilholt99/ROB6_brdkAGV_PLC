@@ -250,8 +250,7 @@ class motorCtrl(Node):
 
     def publish_odom(self, cur_x, cur_y, cur_theta):#, vx, vth
         try:
-            cur_theta_neg = -cur_theta
-            quat = tf_transformations.quaternion_from_euler(0, 0, cur_theta_neg)
+            quat = tf_transformations.quaternion_from_euler(pi, 0, cur_theta)
             
             #self.sendTransform(cur_x,cur_y,cur_theta)
             #print(str(quat))
@@ -260,7 +259,7 @@ class motorCtrl(Node):
             odom.header.stamp = self.get_clock().now().to_msg()
             odom.header.frame_id = 'base_link'
             odom.pose.pose.position.x = cur_x
-            odom.pose.pose.position.y = cur_y
+            odom.pose.pose.position.y = -cur_y
             odom.pose.pose.position.z = 0.0
             odom.pose.pose.orientation.x = float(quat[0])     
             odom.pose.pose.orientation.y = float(quat[1])     
@@ -296,7 +295,7 @@ class motorCtrl(Node):
             # Turtle only exists in 2D, thus we get x and y translation
             # coordinates from the message and set the z coordinate to 0
             t.transform.translation.x = cur_x
-            t.transform.translation.y = cur_y
+            t.transform.translation.y = -cur_y
             t.transform.translation.z = 0.0
 
             # For the same reason, turtle can only rotate around one axis
