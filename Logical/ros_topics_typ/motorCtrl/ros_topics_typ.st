@@ -91,8 +91,25 @@ PROGRAM _CYCLIC
 	ros.topics.twist.linear.x := MAX(MIN(ros.topics.twist.linear.x,ros.topics.config.maxSpeed),ros.topics.config.minSpeed);
 	
 	IF localVariables[0].hmi.output.overload OR localVariables[1].hmi.output.overload OR NOT ros_topics_typCyclic_0.Operational THEN
+		IF lineMode THEN
+			CASE Test2 OF
+				0:
+					localVariables[0].PID.SetValue := 0.01;
+					localVariables[1].PID.SetValue := 0.01;
+				1:
+					localVariables[0].PID.SetValue := 0.01;
+					localVariables[1].PID.SetValue := 0;
+				-1:
+					localVariables[0].PID.SetValue := 0;
+					localVariables[1].PID.SetValue := 0.01;
+				10:
+					localVariables[0].PID.SetValue := 0;
+					localVariables[1].PID.SetValue := 0;
+			END_CASE
+		ELSE
 		localVariables[0].PID.SetValue := 0;
 		localVariables[1].PID.SetValue := 0;
+		END_IF
 	ELSE
 		localVariables[0].PID.SetValue := LREAL_TO_REAL(ros.topics.twist.linear.x + ros.topics.twist.angular.z * ros.topics.config.baseWidth / 2.0) * ros.currentLimiter;  // m/s
 		localVariables[1].PID.SetValue := LREAL_TO_REAL(ros.topics.twist.linear.x - ros.topics.twist.angular.z * ros.topics.config.baseWidth / 2.0) * ros.currentLimiter;

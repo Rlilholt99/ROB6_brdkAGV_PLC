@@ -60,7 +60,7 @@ PROGRAM _CYCLIC
 				END_IF
 //				imgProcessed := TRUE;
 			END_IF
-//		END_IF
+		//		END_IF
 		
 	END_IF
 	
