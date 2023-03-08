@@ -14,8 +14,18 @@ PROGRAM _INIT
 	gVisionNettime.CFG.AxisPositionDelay_Cycles := 1;
 	gVisionNettime.CFG.VisionPreTrigger_Cycles:= 8;
 	
+	positionPID.Enable := TRUE;
+	positionPID.PIDParameters.Gain := 0.005;
+	positionPID.PIDParameters.FilterTime :=  0.000228000456;
+	positionPID.PIDParameters.DerivativeTime :=  0.00228000456;
+	positionPID.PIDParameters.IntegrationTime :=  0.02500019;
 	
-
+	
+	positionPID.MinOut := 0;
+	positionPID.MaxOut := 1;
+	positionPID.Update := TRUE;
+	
+	
 	
 	
 	runOnce := TRUE;

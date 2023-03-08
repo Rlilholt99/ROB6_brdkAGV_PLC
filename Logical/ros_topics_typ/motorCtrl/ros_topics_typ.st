@@ -94,14 +94,14 @@ PROGRAM _CYCLIC
 		IF lineMode THEN
 			CASE Test2 OF
 				0:
-					localVariables[0].PID.SetValue := 0.01;
-					localVariables[1].PID.SetValue := 0.01;
+					localVariables[0].PID.SetValue := 0.2;
+					localVariables[1].PID.SetValue := 0.2;
 				1:
-					localVariables[0].PID.SetValue := 0.01;
-					localVariables[1].PID.SetValue := 0;
+					localVariables[0].PID.SetValue := 0.2+((0.1*drejMere)/2);
+					localVariables[1].PID.SetValue := 0.2;//+(0.1-(0.1*drejMere));
 				-1:
-					localVariables[0].PID.SetValue := 0;
-					localVariables[1].PID.SetValue := 0.01;
+					localVariables[0].PID.SetValue := 0.2;//+(0.1-(0.1*drejMere));
+					localVariables[1].PID.SetValue := 0.2+((0.1*drejMere)/2);
 				10:
 					localVariables[0].PID.SetValue := 0;
 					localVariables[1].PID.SetValue := 0;
