@@ -4,7 +4,7 @@ import sys
 sys.path.insert(1, '/home/user/ros_topics_typ/')
 import libros_topics_typ
 import threading
-from math import pi, cos, sin
+from math import pi#, cos, sin
 import time
 import rclpy
 from rclpy.node import Node
@@ -12,6 +12,7 @@ from tf2_ros import TransformBroadcaster
 import tf_transformations
 from geometry_msgs.msg import Quaternion, Twist, TransformStamped
 from nav_msgs.msg import Odometry
+import traceback
 
 
 #delete me 
@@ -71,8 +72,7 @@ dataset config:
 gUpdateTwist = False
 gTwist = Twist()
 
-odometryGlobal = [float(0),float(0),float(0),float(0),float(0)]
-clock = 1678190064.848563021
+
  
 class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
 
@@ -210,44 +210,34 @@ class motorCtrl(Node):
         while angle < -pi:
             angle += 2.0 * pi
         return angle
-    
-    # def tester(self):
-    #     print(odometryGlobal[0])
-    #     msg = String()
-    #     msg.data = str(odometryGlobal[0])
-    #     print("still going")
-    #     self.publishing.publish(msg)
-    #     self.get_logger().info('Publishing: "%s"' % msg.data)
 
 
+    # def sendTransform(self, cur_x, cur_y,cur_theta):
+    #     t = TransformStamped()
 
+    #     # Read message content and assign it to
+    #     # corresponding tf variables
+    #     t.header.stamp = self.get_clock().now().to_msg()
+    #     t.child_frame_id = 'odom'
+    #     t.header.frame_id = 'base_link'
 
-    def sendTransform(self, cur_x, cur_y,cur_theta):
-        t = TransformStamped()
+    #     # Turtle only exists in 2D, thus we get x and y translation
+    #     # coordinates from the message and set the z coordinate to 0
+    #     t.transform.translation.x = cur_x
+    #     t.transform.translation.y = cur_y
+    #     t.transform.translation.z = 0.0
 
-        # Read message content and assign it to
-        # corresponding tf variables
-        t.header.stamp = self.get_clock().now().to_msg()
-        t.child_frame_id = 'odom'
-        t.header.frame_id = 'base_link'
+    #     # For the same reason, turtle can only rotate around one axis
+    #     # and this why we set rotation in x and y to 0 and obtain
+    #     # rotation in z axis from the message
+    #     q = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
+    #     t.transform.rotation.x = float(q[0])
+    #     t.transform.rotation.y = float(q[1])
+    #     t.transform.rotation.z = float(q[2])
+    #     t.transform.rotation.w = float(q[3])
 
-        # Turtle only exists in 2D, thus we get x and y translation
-        # coordinates from the message and set the z coordinate to 0
-        t.transform.translation.x = cur_x
-        t.transform.translation.y = cur_y
-        t.transform.translation.z = 0.0
-
-        # For the same reason, turtle can only rotate around one axis
-        # and this why we set rotation in x and y to 0 and obtain
-        # rotation in z axis from the message
-        q = tf_transformations.quaternion_from_euler(0, 0, cur_theta)
-        t.transform.rotation.x = float(q[0])
-        t.transform.rotation.y = float(q[1])
-        t.transform.rotation.z = float(q[2])
-        t.transform.rotation.w = float(q[3])
-
-        # Send the transformation
-        self.br.sendTransform(t)
+    #     # Send the transformation
+    #     self.br.sendTransform(t)
 
 
     def publish_odom(self, cur_x, cur_y, cur_theta):#, vx, vth
@@ -286,35 +276,7 @@ class motorCtrl(Node):
             self.publisher_.publish(odom)
             print("/odom published!")
 
-
-#dirty fix
-            #t = TransformStamped()
-
-            # # Read message content and assign it to
-            # # corresponding tf variables
-            # t.header.stamp = self.get_clock().now().to_msg()
-            # t.header.frame_id = 'odom'
-            # t.child_frame_id = 'base_link'
-            
-
-            # # Turtle only exists in 2D, thus we get x and y translation
-            # # coordinates from the message and set the z coordinate to 0
-            # t.transform.translation.x = cur_x
-            # t.transform.translation.y = cur_y
-            # t.transform.translation.z = 0.0
-
-            # # For the same reason, turtle can only rotate around one axis
-            # # and this why we set rotation in x and y to 0 and obtain
-            # # rotation in z axis from the message
-            
-            # t.transform.rotation.x = float(quat[0])
-            # t.transform.rotation.y = float(quat[1])
-            # t.transform.rotation.z = float(quat[2])
-            # t.transform.rotation.w = float(quat[3])
-
-            # # Send the transformation
-            # self.br.sendTransform(t)
-#end of dirty fix       
+     
         except Exception as e:
             print(traceback.format_exc())
              
