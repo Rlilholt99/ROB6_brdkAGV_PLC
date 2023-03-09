@@ -41,6 +41,7 @@ def user callbacks in class ros_topics_typEventHandler:
     on_connected
     on_disconnected
     on_operational
+    on_change_odemetry
 
 boolean values:
     ros_topics_typ_datamodel.is_connected
@@ -87,7 +88,7 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         self.ros_topics_typ_datamodel.log.info("Linux: Motor control exos is running")
 
     def on_disconnected(self):
-        self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, 0.0, 0.0)
+        #self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, 0.0, 0.0)
         self.node.get_logger().info("Disconnected to PLC");
         
     def on_operational(self):
@@ -100,6 +101,7 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         
     def on_change_odemetry(self):
         #print("Odemetry has changed")
+        print("odometry change registered")
         # self.ros_topics_typ_datamodel.log.verbose("python dataset odemetry changed!")
         self.ros_topics_typ_datamodel.log.info("on_change: ros_topics_typ_datamodel.odemetry: " + str(self.ros_topics_typ_datamodel.odemetry.value))
         #self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
@@ -282,6 +284,7 @@ class motorCtrl(Node):
             odom.twist.twist.angular.z = 0.0 #vth
             odom.twist.covariance = odom.pose.covariance
             self.publisher_.publish(odom)
+            print("/odom published!")
 
 
 #dirty fix
