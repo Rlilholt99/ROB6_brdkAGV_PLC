@@ -86,22 +86,28 @@ PROGRAM _CYCLIC
 	//--------------- ex OS done ----------------
 	ExSyncInfo_0(ExTargetLink := ADR(gTarget_0), Enable := TRUE);
 	
+	ExDataConnectionInfo_0(ExTargetLink := ADR(gTarget_0),Enable := TRUE);
+	
 	
 
 	ros.topics.twist.linear.x := MAX(MIN(ros.topics.twist.linear.x,ros.topics.config.maxSpeed),ros.topics.config.minSpeed);
 	
 	IF localVariables[0].hmi.output.overload OR localVariables[1].hmi.output.overload OR NOT ros_topics_typCyclic_0.Operational THEN
 		IF lineMode THEN
+			
 			CASE Test2 OF
 				0:
+					angVel := (localVariables[0].speed-localVariables[1].speed)/ros.topics.config.baseWidth;
 					localVariables[0].PID.SetValue := 0.2;
 					localVariables[1].PID.SetValue := 0.2;
 				1:
-					localVariables[0].PID.SetValue := 0.2+((0.1*drejMere)/2);
-					localVariables[1].PID.SetValue := 0.2;//+(0.1-(0.1*drejMere));
+					angVel := (localVariables[0].speed-localVariables[1].speed)/ros.topics.config.baseWidth;
+					localVariables[0].PID.SetValue := 0.2;//+((0.1*drejMere)/2);
+					localVariables[1].PID.SetValue := 0.2-(0.1-(0.1*drejMere));
 				-1:
-					localVariables[0].PID.SetValue := 0.2;//+(0.1-(0.1*drejMere));
-					localVariables[1].PID.SetValue := 0.2+((0.1*drejMere)/2);
+					angVel := (localVariables[0].speed-localVariables[1].speed)/ros.topics.config.baseWidth;
+					localVariables[0].PID.SetValue := 0.2-(0.1-(0.1*drejMere));
+					localVariables[1].PID.SetValue := 0.2;//+((0.1*drejMere)/2);
 				10:
 					localVariables[0].PID.SetValue := 0;
 					localVariables[1].PID.SetValue := 0;

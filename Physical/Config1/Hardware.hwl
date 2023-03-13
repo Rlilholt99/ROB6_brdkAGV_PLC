@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?AutomationStudio FileVersion="4.9"?>
+<BR.AS.HardwareTopology>
+  <TimeStamps>
+    <TimeStamp LogicalPath="Config1.Hardware.hw" LastWriteTime="03/07/2023 14:47:16" />
+  </TimeStamps>
+  <Modules>
+    <Module Name="VSS112R22.051P-000" Type="VSS112R22.051P-000" X="363" Y="384" />
+    <Module Name="X90CP174_48_00" Type="X90CP174.48-00" X="100" Y="100" />
+    <Module Name="X90AO410.08-00" Type="X90AO410.08-00" X="318" Y="202" />
+    <Module Name="X90AT910.08-00" Type="X90AT910.08-00" X="318" Y="179" />
+    <Module Name="X90DI110.10-00" Type="X90DI110.10-00" X="318" Y="156" />
+    <Module Name="X90PO210.08-00" Type="X90PO210.08-00" X="318" Y="133" />
+    <Module Name="X1" Type="X1" X="318" Y="110" />
+  </Modules>
+  <Links>
+    <Link From="VSS112R22.051P-000" To="X90CP174_48_00" FromPort="PLK1" ToPort="IF3" IsRoutedByUser="False">
+      <Point X="381" Y="502" />
+      <Point X="381" Y="502" />
+      <Point X="381" Y="507" />
+      <Point X="381" Y="515" />
+      <Point X="207" Y="515" />
+      <Point X="207" Y="335" />
+      <Point X="207" Y="330" />
+      <Point X="207" Y="330" />
+    </Link>
+  </Links>
+  <InfoElements />
+</BR.AS.HardwareTopology>

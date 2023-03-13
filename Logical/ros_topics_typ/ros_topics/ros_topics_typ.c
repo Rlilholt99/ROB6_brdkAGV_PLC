@@ -250,6 +250,7 @@ _BUR_PUBLIC void ros_topics_typCyclic(struct ros_topics_typCyclic *inst)
         break;
 
     case 100:
+	
     case 101:
         if (inst->Start)
         {
@@ -270,8 +271,8 @@ _BUR_PUBLIC void ros_topics_typCyclic(struct ros_topics_typCyclic *inst)
         //publish the odemetry_dataset dataset as soon as there are changes
         if (0 != memcmp(&inst->pros_topics_typ->odemetry, &data->odemetry, sizeof(data->odemetry)))
         {
-            memcpy(&data->odemetry, &inst->pros_topics_typ->odemetry, sizeof(data->odemetry));
-            exos_dataset_publish(odemetry_dataset);
+        memcpy(&data->odemetry, &inst->pros_topics_typ->odemetry, sizeof(data->odemetry));
+        exos_dataset_publish(odemetry_dataset);
         }
 
         break;

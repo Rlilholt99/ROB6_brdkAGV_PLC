@@ -27,7 +27,6 @@
       </Task>
       <Task Name="VisionMain">
         <Variable Name="test" />
-        <Variable Name="overlay" />
       </Task>
     </Module>
   </DefaultView>

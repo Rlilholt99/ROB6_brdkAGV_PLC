@@ -72,6 +72,7 @@
     <Parameter ID="TaskClassIdleTime" Value="5000" />
     <Parameter ID="Cyclic1Duration" Value="5000" />
     <Parameter ID="Cyclic1Tolerance" Value="0" />
+    <Parameter ID="Cyclic1Stack" Value="16384" />
     <Parameter ID="Cyclic2Duration" Value="20000" />
     <Parameter ID="Cyclic2Tolerance" Value="20000" />
     <Parameter ID="Cyclic3Duration" Value="50000" />

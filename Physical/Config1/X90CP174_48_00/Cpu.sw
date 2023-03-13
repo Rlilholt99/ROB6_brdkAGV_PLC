@@ -2,8 +2,8 @@
 <?AutomationStudio FileVersion="4.9"?>
 <SwConfiguration CpuAddress="SL1" xmlns="http://br-automation.co.at/AS/SwConfiguration">
   <TaskClass Name="Cyclic#1">
-    <Task Name="VisionMain" Source="Package.VisionMain.prg" Memory="UserROM" Language="IEC" Debugging="true" />
     <Task Name="motorCtrl" Source="ros_topics_typ.motorCtrl.prg" Memory="UserROM" Language="IEC" Debugging="true" />
+    <Task Name="VisionMain" Source="Package.VisionMain.prg" Memory="UserROM" Language="IEC" Debugging="true" Disabled="true" />
     <Task Name="WaterTank_" Source="" Memory="UserROM" Language="Binary" Debugging="true" />
   </TaskClass>
   <TaskClass Name="Cyclic#2" />
@@ -39,6 +39,7 @@
     <BinaryObject Name="Settings" Source="" Memory="UserROM" Language="Binary" />
     <BinaryObject Name="viApp" Source="" Memory="UserROM" Language="Binary" />
     <BinaryObject Name="viComp" Source="" Memory="UserROM" Language="Binary" />
+    <BinaryObject Name="ViLine" Source="" Memory="UserROM" Language="Binary" />
   </Binaries>
   <Libraries>
     <LibraryObject Name="brsystem" Source="Libraries.brsystem.lby" Memory="UserROM" Language="binary" Debugging="true" />
@@ -81,10 +82,10 @@
     <LibraryObject Name="brdkViVF" Source="Libraries.brdkViVF.lby" Memory="UserROM" Language="Binary" Debugging="true" />
     <LibraryObject Name="brdkWS" Source="Libraries.brdkWS.lby" Memory="UserROM" Language="Binary" Debugging="true" />
     <LibraryObject Name="MTLinAlg" Source="Libraries.MTLinAlg.lby" Memory="UserROM" Language="Binary" Debugging="true" />
-    <LibraryObject Name="mpbase" Source="" Memory="UserROM" Language="Binary" Debugging="true" />
-    <LibraryObject Name="arssl" Source="" Memory="UserROM" Language="Binary" Debugging="true" />
     <LibraryObject Name="brdkMU" Source="Libraries.brdkMU.lby" Memory="UserROM" Language="ANSIC" Debugging="true" />
     <LibraryObject Name="brdkSTR" Source="Libraries.brdkSTR.lby" Memory="UserROM" Language="ANSIC" Debugging="true" />
     <LibraryObject Name="AsSem" Source="Libraries.AsSem.lby" Memory="UserROM" Language="binary" Debugging="true" />
+    <LibraryObject Name="mpbase" Source="" Memory="UserROM" Language="Binary" Debugging="true" />
+    <LibraryObject Name="arssl" Source="" Memory="UserROM" Language="Binary" Debugging="true" />
   </Libraries>
 </SwConfiguration>
