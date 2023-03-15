@@ -2,4 +2,5 @@ VAR
 	lineMode : BOOL;
 	drejMere : REAL;
 	Test2 : INT;
+	angVel : LREAL;
 END_VAR

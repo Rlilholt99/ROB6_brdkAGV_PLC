@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "bit": "c",
+        "codecvt": "c",
+        "compare": "c",
+        "condition_variable": "c",
+        "cstddef": "c",
+        "string": "c",
+        "limits": "c",
+        "memory": "c",
+        "mutex": "c",
+        "new": "c",
+        "functional": "c"
+    }
+}

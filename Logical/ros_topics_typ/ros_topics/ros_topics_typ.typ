@@ -63,4 +63,8 @@ TYPE
 		twist : ros_topic_twist_typ; (*SUB*)
 		config : ros_config_typ; (*SUB*)
 	END_STRUCT;
+	ros_Encoder : 	STRUCT 
+		encoder1 : INT; (*PUB*)
+		encoder2 : INT; (*PUB*)
+	END_STRUCT;
 END_TYPE
