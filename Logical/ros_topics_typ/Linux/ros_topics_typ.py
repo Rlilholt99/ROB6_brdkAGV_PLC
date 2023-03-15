@@ -42,7 +42,6 @@ def user callbacks in class ros_topics_typEventHandler:
     on_connected
     on_disconnected
     on_operational
-    on_change_odemetry
 
 boolean values:
     ros_topics_typ_datamodel.is_connected

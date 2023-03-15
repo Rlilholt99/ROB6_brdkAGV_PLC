@@ -60,4 +60,6 @@ syntax: glob
 *.rar
 Logical/program/Common/swVersion/build.typ
 Logical/Program/Common/swVersion/build.typ
+settings.json
+
 
