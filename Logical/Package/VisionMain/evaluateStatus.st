@@ -11,7 +11,7 @@ ACTION evaluateStatus:
 		lineStatus.lineStatusCode := lineStatus.lineStatusCode + 10;
 	END_IF
 	IF lineFollow.lineHoldRight THEN
-		lineStatus.lineStatusCode := lineStatus.lineStatusCode + 116;
+		lineStatus.lineStatusCode := lineStatus.lineStatusCode + 2;
 	END_IF
 	IF lineFollow.lineInterSection THEN
 		lineStatus.lineStatusCode := lineStatus.lineStatusCode + 14;

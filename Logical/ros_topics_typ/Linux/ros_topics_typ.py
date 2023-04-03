@@ -261,7 +261,7 @@ class motorCtrl(Node):
         self.lineSubscription = self.create_subscription(Int32,self.LINE_TOPIC,self.line_callback,0)
         
 
-        self.publisher_ = self.create_publisher(Odometry, '/odom', 10)
+        self.publisher_ = self.create_publisher(Odometry, '/odom', 1)
         self.encoder1Publish = self.create_publisher(Int64, '/encoder1',10)
         self.encoder2Publish = self.create_publisher(Int64, '/encoder2',10)
         self.linePublisher = self.create_publisher(Int32, '/lineStatus',10)

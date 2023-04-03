@@ -1,4 +1,5 @@
 VAR
+	prevCrossBool : BOOL;
 	updateStatus : BOOL;
 	blobArea : UDINT;
 	hwBlob : brdkViBase_hw_blob_10_typ;

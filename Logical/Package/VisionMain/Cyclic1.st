@@ -35,13 +35,13 @@ PROGRAM _CYCLIC
 IF hwCam.in.status.imageAcquisitionReady AND NOT hwCam.in.status.imageProcessingActive THEN
 	imgTrig.trigger := TRUE;
 		cnt := 0;
-		lineStatus.lineStatusCode := 0;
+		
 		
 		
 		// Vi starter med at kigge om vores kamera har fundet nogen resultater
 		// Hvis der er resultater så begynder vi at proccess dem
 		IF hwBlob.in.common.numResults <> 0 AND orientationReached AND NOT awaitDecision THEN
-			
+			lineStatus.lineStatusCode := 0;
 				// Først vil vi gerne gemme det index af vores resultater som er  vores linje
 				// model 1 er den model der bruges til at finde linjen
 				// det index som indeholder linjen bliver gemt i test
@@ -111,13 +111,19 @@ IF hwCam.in.status.imageAcquisitionReady AND NOT hwCam.in.status.imageProcessing
 //				awaitDecision := TRUE;
 			END_IF
 				// Her tjekker vi om linjen bliver størrer, dette dækker tilfældet af sammenfletninger
-			IF blobArea > 725000 THEN
-//				awaitDecision := TRUE;
-				lineStatus.lineStatusCode := 30;
-				updateLineStatus := TRUE;
+			IF blobArea > 850000 THEN
+
 				crossBool := TRUE;
+				IF crossBool <> prevCrossBool THEN
+					awaitDecision := TRUE;
+					updateLineStatus := TRUE;
+				END_IF
+				lineStatus.lineStatusCode := 30;
+
+				prevCrossBool := crossBool;
 			ELSE
 				crossBool := FALSE;
+				prevCrossBool := crossBool;
 			END_IF
 			
 				// Hvis det er tilfældet af en sammenfletning så baseret på vores condition "holdRight" så drejer robotten til højre eller venstre
