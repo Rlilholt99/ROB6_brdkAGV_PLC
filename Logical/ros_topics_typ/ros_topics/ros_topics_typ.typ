@@ -58,13 +58,31 @@ TYPE
 		odemetry : ros_topic_odemety_typ; (*PUB*)
 		twist : ros_topic_twist_typ; (*SUB*)
 		config : ros_config_typ; (*SUB*)
+		encoder : ros_encoder; (*PUB*)
+		vaccumTopic : ros_armBools; (*SUB*)
+		lineFollow : ros_lineMode; (*SUB*)
+		lineStatus : ros_lineStatus; (*PUB*)
 	END_STRUCT;
 	ros_motorCtrl : 	STRUCT 
 		twist : ros_topic_twist_typ; (*SUB*)
 		config : ros_config_typ; (*SUB*)
 	END_STRUCT;
-	ros_Encoder : 	STRUCT 
-		encoder1 : INT; (*PUB*)
-		encoder2 : INT; (*PUB*)
+	ros_encoder : 	STRUCT 
+		encoder1 : INT;
+		encoder2 : INT;
+	END_STRUCT;
+	ros_armBools : 	STRUCT 
+		vaccumValve : BOOL;
+		vaccumMotor : BOOL;
+	END_STRUCT;
+	ros_lineMode : 	STRUCT 
+		lineMode : BOOL;
+		lineSharpTurn : BOOL;
+		lineHoldRight : BOOL;
+		lineForward : BOOL;
+		lineInterSection : BOOL;
+	END_STRUCT;
+	ros_lineStatus : 	STRUCT 
+		lineStatusCode : INT;
 	END_STRUCT;
 END_TYPE

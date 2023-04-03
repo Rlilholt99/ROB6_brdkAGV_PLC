@@ -1,6 +1,0 @@
-# Autodetect text files and set to crlf
-* text=auto eol=crlf
-
-# ...Unless the name matches the following overriding patterns
-*.sh text eol=lf
-Linux/* text eol=lf

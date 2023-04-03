@@ -43,8 +43,8 @@ PROGRAM _INIT
 		this.accLimiter.Enable := TRUE;
 		this.accLimiter.MaxNegSlewRate := 1;
 		this.accLimiter.MaxPosSlewRate := 1;
-		this.accLimiter.MaxOut := 2;
-		this.accLimiter.MinOut := -2;
+		this.accLimiter.MaxOut := 1;
+		this.accLimiter.MinOut := -1;
 		this.accLimiter.Update := TRUE;
 		
 		this.PIDtune.SetValue:= 1.0;
@@ -77,48 +77,263 @@ PROGRAM _CYCLIC
 	//Auto connect when deployment is off and manually started in GPOS:
 	//ros_topics_typCyclic_0.Enable := TRUE;
 	ros_topics_typCyclic_0.Start := ros_topics_typCyclic_0.Connected;
-    
+	IF counter2 > 1 THEN
+		counter2 := 0;
 	ros_topics_typCyclic_0(Handle := ros_topics_typInit_0.Handle, pros_topics_typ := ADR(ros.topics));
-    
+	ELSE
+		counter2 := counter2 + 1;
+	END_IF
 	ExComponentInfo_0(ExTargetLink := ADR(gTarget_0), ExComponentLink := ADR(gros_topics_typ_0), Enable := TRUE);
     
 	ExDatamodelInfo_0(ExTargetLink := ADR(gTarget_0), Enable := TRUE, InstanceName := 'ros_topics_typ_0');
 	//--------------- ex OS done ----------------
 	ExSyncInfo_0(ExTargetLink := ADR(gTarget_0), Enable := TRUE);
 	
+	
 	ExDataConnectionInfo_0(ExTargetLink := ADR(gTarget_0),Enable := TRUE);
 	
+	forwardTimer();
+	moveForwardTimer();
 	
-
+	suction.motorEnable := ros.topics.vaccumTopic.vaccumMotor;
+	suction.valveEnable := ros.topics.vaccumTopic.vaccumValve;
+	lineFollow.lineForward := ros.topics.lineFollow.lineForward;
+	lineFollow.lineHoldRight := ros.topics.lineFollow.lineHoldRight;
+	lineFollow.lineMode := ros.topics.lineFollow.lineMode;
+	lineFollow.lineSharpTurn := ros.topics.lineFollow.lineSharpTurn;
+	lineFollow.lineInterSection := ros.topics.lineFollow.lineInterSection;
 	ros.topics.twist.linear.x := MAX(MIN(ros.topics.twist.linear.x,ros.topics.config.maxSpeed),ros.topics.config.minSpeed);
+	
+	
+	mathCheck1 :=  LREAL_TO_REAL(0.5*(drejMere - errOld)*ros.topics.config.baseWidth/2.0);//LREAL_TO_REAL(0.3-(drejMere*0.35 + 0.01*(drejMere - errOld))*ros.topics.config.baseWidth/2.0);
+	mathCheck2 := LREAL_TO_REAL(0.3+(drejMere*0.35 + 0.01*(drejMere-errOld))*ros.topics.config.baseWidth/2.0);
 	
 	IF localVariables[0].hmi.output.overload OR localVariables[1].hmi.output.overload OR NOT ros_topics_typCyclic_0.Operational THEN
 		IF lineMode THEN
 			
 			CASE Test2 OF
-				0:
-					angVel := (localVariables[0].speed-localVariables[1].speed)/ros.topics.config.baseWidth;
-					localVariables[0].PID.SetValue := 0.2;
-					localVariables[1].PID.SetValue := 0.2;
-				1:
-					angVel := (localVariables[0].speed-localVariables[1].speed)/ros.topics.config.baseWidth;
-					localVariables[0].PID.SetValue := 0.2;//+((0.1*drejMere)/2);
-					localVariables[1].PID.SetValue := 0.2-(0.1-(0.1*drejMere));
-				-1:
-					angVel := (localVariables[0].speed-localVariables[1].speed)/ros.topics.config.baseWidth;
-					localVariables[0].PID.SetValue := 0.2-(0.1-(0.1*drejMere));
-					localVariables[1].PID.SetValue := 0.2;//+((0.1*drejMere)/2);
-				10:
+				0:	
+					IF tempDec <> FALSE THEN
+						awaitDecision := FALSE;
+						tempDec := FALSE;
+					ELSE
+						//lineFollow.lineDecision := ros.topics.lineFollow.lineDecision;
+
+					END_IF
+	
+					
 					localVariables[0].PID.SetValue := 0;
 					localVariables[1].PID.SetValue := 0;
+				1:
+					
+					localVariables[0].PID.SetValue := LREAL_TO_REAL(0.3-(drejMere*0.35 + 100*(drejMere - errOld))*ros.topics.config.baseWidth/2.0);
+					localVariables[1].PID.SetValue := LREAL_TO_REAL(0.3+(drejMere*0.35 + 100*(drejMere-errOld))*ros.topics.config.baseWidth/2.0);
+					errOld := drejMere;
+				-1:
+					localVariables[0].PID.SetValue := LREAL_TO_REAL(0.3-(drejMere*0.35)*ros.topics.config.baseWidth/2.0);
+					localVariables[1].PID.SetValue := LREAL_TO_REAL(0.3+(drejMere*0.35)*ros.topics.config.baseWidth/2.0);
+				5:
+					IF moveForward THEN
+						localVariables[0].PID.SetValue := 0.2;
+						localVariables[1].PID.SetValue := 0.2;
+						moveForwardTimer.PT := T#3000ms;
+						moveForwardTimer.IN := TRUE;
+						IF moveForwardTimer.Q THEN
+							localVariables[0].PID.SetValue := 0;
+							localVariables[1].PID.SetValue := 0;
+							Test2 := 10;
+							moveForwardTimer.IN := FALSE;
+						END_IF
+					ELSE
+						Test2 := 10;
+					END_IF
+						
+				10:
+					ros.topics.lineStatus.lineStatusCode := 90;
+					localVariables[0].PID.SetValue := LREAL_TO_REAL(-(drejMere*0.45)*ros.topics.config.baseWidth/2.0);
+					localVariables[1].PID.SetValue := LREAL_TO_REAL((drejMere*0.45)*ros.topics.config.baseWidth/2.0);
+					moveForwardTimer.IN := FALSE;
+				20:
+					CASE turnSwitch OF
+						0:
+							orientationReached := FALSE;
+							startOrientation := LREAL_TO_REAL(ros.cur_theta);
+							IF rightTurn THEN
+								goalOrientation := startOrientation - 0.8929;
+								turnSwitch := 5;
+							ELSE
+								goalOrientation := startOrientation + 0.8929;
+								turnSwitch := 5;
+							END_IF
+							
+						5:
+							lastOrientation := LREAL_TO_REAL(ros.cur_theta);
+							localVariables[0].PID.SetValue := 0;
+							localVariables[1].PID.SetValue := 0;
+							IF ros.vel_x = 0 THEN
+								turnSwitch := 7;
+							END_IF
+						
+						7:
+							forwardTimer.PT := T#5000ms;
+							localVariables[0].PID.SetValue := 0.05;
+							localVariables[1].PID.SetValue := 0.05;
+							forwardTimer.IN := TRUE;
+							IF forwardTimer.Q THEN
+								localVariables[0].PID.SetValue := 0;
+								localVariables[1].PID.SetValue := 0;
+								turnSwitch := 10;
+								forwardTimer.IN := FALSE;
+							END_IF
+						10:
+							
+						
+							IF ros.cur_theta + 2.0 < lastOrientation OR ros.cur_theta - 2.0 > lastOrientation THEN
+								iAlive := iAlive +1;
+								goalOrientation := LREAL_TO_REAL(ros.cur_theta + remainingOrientation);
+							ELSIF rightTurn THEN
+								IF ros.cur_theta < goalOrientation THEN
+									turnSwitch := 20;
+								END_IF
+							ELSIF ros.cur_theta > goalOrientation THEN
+								turnSwitch := 20;
+							END_IF
+							lastOrientation := LREAL_TO_REAL(ros.cur_theta);
+							remainingOrientation := LREAL_TO_REAL(goalOrientation - ros.cur_theta);
+							IF rightTurn THEN
+								localVariables[0].PID.SetValue := -0.05;
+								localVariables[1].PID.SetValue := 0.05;
+							ELSE 
+								localVariables[0].PID.SetValue := 0.05;
+								localVariables[1].PID.SetValue := -0.05;
+								END_IF
+						20:
+							orientationReached := TRUE;
+							localVariables[0].PID.SetValue := 0;
+							localVariables[1].PID.SetValue := 0;
+							sharpTurn := FALSE;
+							Test2 := 10;
+							turnSwitch := 0;		
+					END_CASE
+					
 			END_CASE
 		ELSE
 		localVariables[0].PID.SetValue := 0;
 		localVariables[1].PID.SetValue := 0;
 		END_IF
 	ELSE
-		localVariables[0].PID.SetValue := LREAL_TO_REAL(ros.topics.twist.linear.x + ros.topics.twist.angular.z * ros.topics.config.baseWidth / 2.0) * ros.currentLimiter;  // m/s
-		localVariables[1].PID.SetValue := LREAL_TO_REAL(ros.topics.twist.linear.x - ros.topics.twist.angular.z * ros.topics.config.baseWidth / 2.0) * ros.currentLimiter;
+		IF ros.topics.lineFollow.lineMode THEN
+			
+			CASE Test2 OF
+				0:	
+					IF tempDec <> FALSE THEN
+						awaitDecision := FALSE;
+						tempDec := FALSE;
+					ELSE
+						//lineFollow.lineDecision := ros.topics.lineFollow.lineDecision;
+
+					END_IF
+	
+					
+					localVariables[0].PID.SetValue := 0;
+					localVariables[1].PID.SetValue := 0;
+				1:
+					
+					localVariables[0].PID.SetValue := LREAL_TO_REAL(0.3-(drejMere*0.35 + 100*(drejMere - errOld))*ros.topics.config.baseWidth/2.0);
+					localVariables[1].PID.SetValue := LREAL_TO_REAL(0.3+(drejMere*0.35 + 100*(drejMere-errOld))*ros.topics.config.baseWidth/2.0);
+					errOld := drejMere;
+				-1:
+					localVariables[0].PID.SetValue := LREAL_TO_REAL(0.3-(drejMere*0.35)*ros.topics.config.baseWidth/2.0);
+					localVariables[1].PID.SetValue := LREAL_TO_REAL(0.3+(drejMere*0.35)*ros.topics.config.baseWidth/2.0);
+				5:
+					IF moveForward THEN
+						localVariables[0].PID.SetValue := 0.2;
+						localVariables[1].PID.SetValue := 0.2;
+						moveForwardTimer.PT := T#3000ms;
+						moveForwardTimer.IN := TRUE;
+						IF moveForwardTimer.Q THEN
+							localVariables[0].PID.SetValue := 0;
+							localVariables[1].PID.SetValue := 0;
+							Test2 := 10;
+							moveForwardTimer.IN := FALSE;
+						END_IF
+					ELSE
+						Test2 := 10;
+					END_IF
+						
+				10:
+					ros.topics.lineStatus.lineStatusCode := 90;
+					localVariables[0].PID.SetValue := LREAL_TO_REAL(-(drejMere*0.45)*ros.topics.config.baseWidth/2.0);
+					localVariables[1].PID.SetValue := LREAL_TO_REAL((drejMere*0.45)*ros.topics.config.baseWidth/2.0);
+					moveForwardTimer.IN := FALSE;
+				20:
+					CASE turnSwitch OF
+						0:
+							orientationReached := FALSE;
+							startOrientation := LREAL_TO_REAL(ros.cur_theta);
+							IF rightTurn THEN
+								goalOrientation := startOrientation - 0.8929;
+								turnSwitch := 5;
+							ELSE
+								goalOrientation := startOrientation + 0.8929;
+								turnSwitch := 5;
+							END_IF
+							
+						5:
+							lastOrientation := LREAL_TO_REAL(ros.cur_theta);
+							localVariables[0].PID.SetValue := 0;
+							localVariables[1].PID.SetValue := 0;
+							IF ros.vel_x = 0 THEN
+								turnSwitch := 7;
+							END_IF
+						
+						7:
+							forwardTimer.PT := T#5000ms;
+							localVariables[0].PID.SetValue := 0.05;
+							localVariables[1].PID.SetValue := 0.05;
+							forwardTimer.IN := TRUE;
+							IF forwardTimer.Q THEN
+								localVariables[0].PID.SetValue := 0;
+								localVariables[1].PID.SetValue := 0;
+								turnSwitch := 10;
+								forwardTimer.IN := FALSE;
+							END_IF
+						10:
+							
+						
+							IF ros.cur_theta + 2.0 < lastOrientation OR ros.cur_theta - 2.0 > lastOrientation THEN
+								iAlive := iAlive +1;
+								goalOrientation := LREAL_TO_REAL(ros.cur_theta + remainingOrientation);
+							ELSIF rightTurn THEN
+								IF ros.cur_theta < goalOrientation THEN
+									turnSwitch := 20;
+								END_IF
+							ELSIF ros.cur_theta > goalOrientation THEN
+								turnSwitch := 20;
+							END_IF
+							lastOrientation := LREAL_TO_REAL(ros.cur_theta);
+							remainingOrientation := LREAL_TO_REAL(goalOrientation - ros.cur_theta);
+							IF rightTurn THEN
+								localVariables[0].PID.SetValue := -0.05;
+								localVariables[1].PID.SetValue := 0.05;
+							ELSE 
+								localVariables[0].PID.SetValue := 0.05;
+								localVariables[1].PID.SetValue := -0.05;
+							END_IF
+						20:
+							orientationReached := TRUE;
+							localVariables[0].PID.SetValue := 0;
+							localVariables[1].PID.SetValue := 0;
+							sharpTurn := FALSE;
+							Test2 := 10;
+							turnSwitch := 0;		
+					END_CASE
+					
+			END_CASE	
+		ELSE
+			localVariables[0].PID.SetValue := LREAL_TO_REAL(ros.topics.twist.linear.x + ros.topics.twist.angular.z * ros.topics.config.baseWidth / 2.0) * ros.currentLimiter;  // m/s
+			localVariables[1].PID.SetValue := LREAL_TO_REAL(ros.topics.twist.linear.x - ros.topics.twist.angular.z * ros.topics.config.baseWidth / 2.0) * ros.currentLimiter;
+		END_IF
 	END_IF
 		
 	
@@ -257,7 +472,10 @@ PROGRAM _CYCLIC
 		END_IF
 				
 	END_FOR
-		
+	
+	
+	
+	
 	ros.currentLimiter := MIN(localVariables[0].currentLimiter,localVariables[1].currentLimiter);
 		
 	ros.diffDist := localVariables[1].distance-localVariables[0].distance;
@@ -278,18 +496,28 @@ PROGRAM _CYCLIC
 		ros.cur_theta := normalizeAngle(ros.cur_theta + ros.d_theta);
 	END_IF
 	
-		
+	//ros.topics.encoder.encoder1 := localVariables[0].hw.input.encoder;
+	//ros.topics.encoder.encoder2 := localVariables[1].hw.input.encoder;
+
 	ros.vel_x := ros.dist * (1000.0/localVariables[0].diffTime);
 	ros.vel_theta := ros.d_theta * (1000.0/localVariables[0].diffTime);
 	
 	// set ros data
+	IF counter > 5 THEN
+		counter := 0;
 	ros.topics.odemetry.pose.pose.position.x 	:= ros.cur_x;
 	ros.topics.odemetry.pose.pose.position.y	:= ros.cur_y;
 	ros.topics.odemetry.pose.pose.orientation.z	:= ros.cur_theta;
 		
 	ros.topics.odemetry.twist.twist.linear.x  	:= ros.vel_x;
 	ros.topics.odemetry.twist.twist.angular.z 	:= ros.vel_theta;
-			
+	IF updateLineStatus THEN	
+		ros.topics.lineStatus.lineStatusCode := lineStatus.lineStatusCode;
+		updateLineStatus := FALSE;
+	END_IF
+	ELSE
+		counter := counter +1;
+	END_IF
 	setupWatchPointers;
 	
 

@@ -7,6 +7,5 @@
     <Object Type="Package" Description="Global libraries">Libraries</Object>
     <Object Type="Package">ros_topics_typ</Object>
     <Object Type="Package">Package</Object>
-    <Object Type="Package">mappView</Object>
   </Objects>
 </Package>

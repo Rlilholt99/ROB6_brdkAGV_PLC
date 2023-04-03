@@ -1,8 +1,0 @@
-VAR
-    ros_topics_typInit_0 : ros_topics_typInit;
-    ros_topics_typCyclic_0 : ros_topics_typCyclic;
-    ros_topics_typExit_0 : ros_topics_typExit;
-    ros_topics_typ_0 : ros_topics_typ;
-    ExComponentInfo_0 : ExComponentInfo;
-    ExDatamodelInfo_0 : ExDatamodelInfo;
-END_VAR

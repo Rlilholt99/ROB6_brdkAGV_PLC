@@ -18,6 +18,10 @@ typedef struct libros_topics_typHandle
     exos_dataset_handle_t odemetry_dataset;
     exos_dataset_handle_t twist_dataset;
     exos_dataset_handle_t config_dataset;
+    exos_dataset_handle_t encoder_dataset;
+    exos_dataset_handle_t vaccumtopic;
+    exos_dataset_handle_t linefollow;
+    exos_dataset_handle_t linestatus;
 } libros_topics_typHandle_t;
 
 static libros_topics_typHandle_t h_ros_topics_typ;
@@ -40,9 +44,49 @@ static void libros_topics_typ_datasetEvent(exos_dataset_handle_t *dataset, EXOS_
                 h_ros_topics_typ.ext_ros_topics_typ_datamodel.odemetry.on_change();
             }
         }
+        else if (0 == strcmp(dataset->name, "encoder"))
+        {
+            //update the nettime
+            h_ros_topics_typ.ext_ros_topics_typ_datamodel.encoder.nettime = dataset->nettime;
+
+            //trigger the callback if assigned
+            if (NULL != h_ros_topics_typ.ext_ros_topics_typ_datamodel.encoder.on_change)
+            {
+                h_ros_topics_typ.ext_ros_topics_typ_datamodel.encoder.on_change();
+            }
+        }
+        else if (0 == strcmp(dataset->name, "lineStatus"))
+        {
+            //update the nettime
+            h_ros_topics_typ.ext_ros_topics_typ_datamodel.lineStatus.nettime = dataset->nettime;
+
+            //trigger the callback if assigned
+            if (NULL != h_ros_topics_typ.ext_ros_topics_typ_datamodel.lineStatus.on_change)
+            {
+                h_ros_topics_typ.ext_ros_topics_typ_datamodel.lineStatus.on_change();
+            }
+        }
         break;
 
-    default:
+    case EXOS_DATASET_EVENT_PUBLISHED:
+        break;
+    case EXOS_DATASET_EVENT_DELIVERED:
+        break;
+    case EXOS_DATASET_EVENT_CONNECTION_CHANGED:
+        INFO("dataset %s changed state to %s", dataset->name, exos_get_state_string(dataset->connection_state));
+
+        switch (dataset->connection_state)
+        {
+        case EXOS_STATE_DISCONNECTED:
+            break;
+        case EXOS_STATE_CONNECTED:
+            break;
+        case EXOS_STATE_OPERATIONAL:
+            break;
+        case EXOS_STATE_ABORTED:
+            ERROR("dataset %s error %d (%s) occured", dataset->name, dataset->error, exos_get_error_string(dataset->error));
+            break;
+        }
         break;
     }
 }
@@ -100,11 +144,19 @@ static void libros_topics_typ_datamodelEvent(exos_datamodel_handle_t *datamodel,
 
 static void libros_topics_typ_publish_twist_dataset(void)
 {
-    exos_dataset_publish(&h_ros_topics_typ.twist_dataset);
+    EXOS_ASSERT_OK(exos_dataset_publish(&h_ros_topics_typ.twist_dataset));
 }
 static void libros_topics_typ_publish_config_dataset(void)
 {
-    exos_dataset_publish(&h_ros_topics_typ.config_dataset);
+    EXOS_ASSERT_OK(exos_dataset_publish(&h_ros_topics_typ.config_dataset));
+}
+static void libros_topics_typ_publish_vaccumtopic(void)
+{
+    EXOS_ASSERT_OK(exos_dataset_publish(&h_ros_topics_typ.vaccumtopic));
+}
+static void libros_topics_typ_publish_linefollow(void)
+{
+    EXOS_ASSERT_OK(exos_dataset_publish(&h_ros_topics_typ.linefollow));
 }
 
 static void libros_topics_typ_connect(void)
@@ -116,6 +168,10 @@ static void libros_topics_typ_connect(void)
     EXOS_ASSERT_OK(exos_dataset_connect(&(h_ros_topics_typ.odemetry_dataset), EXOS_DATASET_SUBSCRIBE, libros_topics_typ_datasetEvent));
     EXOS_ASSERT_OK(exos_dataset_connect(&(h_ros_topics_typ.twist_dataset), EXOS_DATASET_PUBLISH, libros_topics_typ_datasetEvent));
     EXOS_ASSERT_OK(exos_dataset_connect(&(h_ros_topics_typ.config_dataset), EXOS_DATASET_PUBLISH, libros_topics_typ_datasetEvent));
+    EXOS_ASSERT_OK(exos_dataset_connect(&(h_ros_topics_typ.encoder_dataset), EXOS_DATASET_SUBSCRIBE, libros_topics_typ_datasetEvent));
+    EXOS_ASSERT_OK(exos_dataset_connect(&(h_ros_topics_typ.vaccumtopic), EXOS_DATASET_PUBLISH, libros_topics_typ_datasetEvent));
+    EXOS_ASSERT_OK(exos_dataset_connect(&(h_ros_topics_typ.linefollow), EXOS_DATASET_PUBLISH, libros_topics_typ_datasetEvent));
+    EXOS_ASSERT_OK(exos_dataset_connect(&(h_ros_topics_typ.linestatus), EXOS_DATASET_SUBSCRIBE, libros_topics_typ_datasetEvent));
 }
 static void libros_topics_typ_disconnect(void)
 {
@@ -186,6 +242,8 @@ libros_topics_typ_t *libros_topics_typ_init(void)
 
     h_ros_topics_typ.ext_ros_topics_typ_datamodel.twist.publish = libros_topics_typ_publish_twist_dataset;
     h_ros_topics_typ.ext_ros_topics_typ_datamodel.config.publish = libros_topics_typ_publish_config_dataset;
+    h_ros_topics_typ.ext_ros_topics_typ_datamodel.vaccumTopic.publish = libros_topics_typ_publish_vaccumtopic;
+    h_ros_topics_typ.ext_ros_topics_typ_datamodel.lineFollow.publish = libros_topics_typ_publish_linefollow;
     
     h_ros_topics_typ.ext_ros_topics_typ_datamodel.connect = libros_topics_typ_connect;
     h_ros_topics_typ.ext_ros_topics_typ_datamodel.disconnect = libros_topics_typ_disconnect;
@@ -221,6 +279,22 @@ libros_topics_typ_t *libros_topics_typ_init(void)
     EXOS_ASSERT_OK(exos_dataset_init(&h_ros_topics_typ.config_dataset, &h_ros_topics_typ.ros_topics_typ_datamodel, "config", &h_ros_topics_typ.ext_ros_topics_typ_datamodel.config.value, sizeof(h_ros_topics_typ.ext_ros_topics_typ_datamodel.config.value)));
     h_ros_topics_typ.config_dataset.user_context = NULL; //not used
     h_ros_topics_typ.config_dataset.user_tag = 0; //not used
+
+    EXOS_ASSERT_OK(exos_dataset_init(&h_ros_topics_typ.encoder_dataset, &h_ros_topics_typ.ros_topics_typ_datamodel, "encoder", &h_ros_topics_typ.ext_ros_topics_typ_datamodel.encoder.value, sizeof(h_ros_topics_typ.ext_ros_topics_typ_datamodel.encoder.value)));
+    h_ros_topics_typ.encoder_dataset.user_context = NULL; //not used
+    h_ros_topics_typ.encoder_dataset.user_tag = 0; //not used
+
+    EXOS_ASSERT_OK(exos_dataset_init(&h_ros_topics_typ.vaccumtopic, &h_ros_topics_typ.ros_topics_typ_datamodel, "vaccumTopic", &h_ros_topics_typ.ext_ros_topics_typ_datamodel.vaccumTopic.value, sizeof(h_ros_topics_typ.ext_ros_topics_typ_datamodel.vaccumTopic.value)));
+    h_ros_topics_typ.vaccumtopic.user_context = NULL; //not used
+    h_ros_topics_typ.vaccumtopic.user_tag = 0; //not used
+
+    EXOS_ASSERT_OK(exos_dataset_init(&h_ros_topics_typ.linefollow, &h_ros_topics_typ.ros_topics_typ_datamodel, "lineFollow", &h_ros_topics_typ.ext_ros_topics_typ_datamodel.lineFollow.value, sizeof(h_ros_topics_typ.ext_ros_topics_typ_datamodel.lineFollow.value)));
+    h_ros_topics_typ.linefollow.user_context = NULL; //not used
+    h_ros_topics_typ.linefollow.user_tag = 0; //not used
+
+    EXOS_ASSERT_OK(exos_dataset_init(&h_ros_topics_typ.linestatus, &h_ros_topics_typ.ros_topics_typ_datamodel, "lineStatus", &h_ros_topics_typ.ext_ros_topics_typ_datamodel.lineStatus.value, sizeof(h_ros_topics_typ.ext_ros_topics_typ_datamodel.lineStatus.value)));
+    h_ros_topics_typ.linestatus.user_context = NULL; //not used
+    h_ros_topics_typ.linestatus.user_tag = 0; //not used
 
     return &(h_ros_topics_typ.ext_ros_topics_typ_datamodel);
 }

@@ -1,6 +1,17 @@
 VAR
+	updateLineStatus : BOOL;
+	sharpTurn : BOOL;
+	rightTurn : BOOL;
+	orientationReached : BOOL := TRUE;
 	lineMode : BOOL;
 	drejMere : REAL;
 	Test2 : INT;
+	slowDown : REAL;
 	angVel : LREAL;
+	holdRight : BOOL;
+	lineFollow : ros_lineMode;
+	moveForward : BOOL;
+	lineStatus : ros_lineStatus;
+	awaitDecision : BOOL;
+	tempDec : BOOL;
 END_VAR

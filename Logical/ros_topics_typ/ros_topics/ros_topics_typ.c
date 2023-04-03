@@ -22,13 +22,18 @@ typedef struct
     exos_dataset_handle_t odemetry_dataset;
     exos_dataset_handle_t twist_dataset;
     exos_dataset_handle_t config_dataset;
+    exos_dataset_handle_t encoder_dataset;
+    exos_dataset_handle_t vaccumtopic;
+    exos_dataset_handle_t linefollow;
+    exos_dataset_handle_t linestatus;
 } ros_topics_typHandle_t;
 
 static void datasetEvent(exos_dataset_handle_t *dataset, EXOS_DATASET_EVENT_TYPE event_type, void *info)
 {
     struct ros_topics_typCyclic *inst = (struct ros_topics_typCyclic *)dataset->datamodel->user_context;
     ros_topics_typHandle_t *handle = (ros_topics_typHandle_t *)inst->Handle;
-
+    SUCCESS("test %i, confusion: %i",event_type,dataset->send_buffer.free)
+    
     switch (event_type)
     {
     case EXOS_DATASET_EVENT_UPDATED:
@@ -42,6 +47,14 @@ static void datasetEvent(exos_dataset_handle_t *dataset, EXOS_DATASET_EVENT_TYPE
         {
             memcpy(&inst->pros_topics_typ->config, dataset->data, dataset->size);
         }
+        else if(0 == strcmp(dataset->name, "vaccumTopic"))
+        {
+            memcpy(&inst->pros_topics_typ->vaccumTopic, dataset->data, dataset->size);
+        }
+        else if(0 == strcmp(dataset->name, "lineFollow"))
+        {
+            memcpy(&inst->pros_topics_typ->lineFollow, dataset->data, dataset->size);
+        }
         break;
 
     case EXOS_DATASET_EVENT_PUBLISHED:
@@ -51,6 +64,14 @@ static void datasetEvent(exos_dataset_handle_t *dataset, EXOS_DATASET_EVENT_TYPE
         {
             // ros_topic_odemety_typ *odemetry_dataset = (ros_topic_odemety_typ *)dataset->data;
         }
+        else if(0 == strcmp(dataset->name, "encoder"))
+        {
+            // ros_encoder *encoder_dataset = (ros_encoder *)dataset->data;
+        }
+        else if(0 == strcmp(dataset->name, "lineStatus"))
+        {
+            // ros_lineStatus *linestatus = (ros_lineStatus *)dataset->data;
+        }
         break;
 
     case EXOS_DATASET_EVENT_DELIVERED:
@@ -58,7 +79,17 @@ static void datasetEvent(exos_dataset_handle_t *dataset, EXOS_DATASET_EVENT_TYPE
         //handle each published dataset separately
         if(0 == strcmp(dataset->name, "odemetry"))
         {
+            //SUCCESS("odom published");
             // ros_topic_odemety_typ *odemetry_dataset = (ros_topic_odemety_typ *)dataset->data;
+        }
+        else if(0 == strcmp(dataset->name, "encoder"))
+        {
+            // ros_encoder *encoder_dataset = (ros_encoder *)dataset->data;
+        }
+        else if(0 == strcmp(dataset->name, "lineStatus"))
+        {
+            SUCCESS("lineStatus published");
+            // ros_lineStatus *linestatus = (ros_lineStatus *)dataset->data;
         }
         break;
 
@@ -150,11 +181,19 @@ _BUR_PUBLIC void ros_topics_typInit(struct ros_topics_typInit *inst)
     exos_dataset_handle_t *odemetry_dataset = &handle->odemetry_dataset;
     exos_dataset_handle_t *twist_dataset = &handle->twist_dataset;
     exos_dataset_handle_t *config_dataset = &handle->config_dataset;
+    exos_dataset_handle_t *encoder_dataset = &handle->encoder_dataset;
+    exos_dataset_handle_t *vaccumtopic = &handle->vaccumtopic;
+    exos_dataset_handle_t *linefollow = &handle->linefollow;
+    exos_dataset_handle_t *linestatus = &handle->linestatus;
     EXOS_ASSERT_OK(exos_datamodel_init(ros_topics_typ_datamodel, "ros_topics_typ_0", "gros_topics_typ_0"));
 
     EXOS_ASSERT_OK(exos_dataset_init(odemetry_dataset, ros_topics_typ_datamodel, "odemetry", &handle->data.odemetry, sizeof(handle->data.odemetry)));
     EXOS_ASSERT_OK(exos_dataset_init(twist_dataset, ros_topics_typ_datamodel, "twist", &handle->data.twist, sizeof(handle->data.twist)));
     EXOS_ASSERT_OK(exos_dataset_init(config_dataset, ros_topics_typ_datamodel, "config", &handle->data.config, sizeof(handle->data.config)));
+    EXOS_ASSERT_OK(exos_dataset_init(encoder_dataset, ros_topics_typ_datamodel, "encoder", &handle->data.encoder, sizeof(handle->data.encoder)));
+    EXOS_ASSERT_OK(exos_dataset_init(vaccumtopic, ros_topics_typ_datamodel, "vaccumTopic", &handle->data.vaccumTopic, sizeof(handle->data.vaccumTopic)));
+    EXOS_ASSERT_OK(exos_dataset_init(linefollow, ros_topics_typ_datamodel, "lineFollow", &handle->data.lineFollow, sizeof(handle->data.lineFollow)));
+    EXOS_ASSERT_OK(exos_dataset_init(linestatus, ros_topics_typ_datamodel, "lineStatus", &handle->data.lineStatus, sizeof(handle->data.lineStatus)));
     
     inst->Handle = (UDINT)handle;
 }
@@ -215,6 +254,42 @@ _BUR_PUBLIC void ros_topics_typCyclic(struct ros_topics_typCyclic *inst)
         config_dataset->dataset_event_callback = datasetEvent;
     }
 
+    exos_dataset_handle_t *encoder_dataset = &handle->encoder_dataset;
+    encoder_dataset->user_context = NULL; //user defined
+    encoder_dataset->user_tag = 0; //user defined
+    //handle online download of the library
+    if(NULL != encoder_dataset->dataset_event_callback && encoder_dataset->dataset_event_callback != datasetEvent)
+    {
+        encoder_dataset->dataset_event_callback = datasetEvent;
+    }
+
+    exos_dataset_handle_t *vaccumtopic = &handle->vaccumtopic;
+    vaccumtopic->user_context = NULL; //user defined
+    vaccumtopic->user_tag = 0; //user defined
+    //handle online download of the library
+    if(NULL != vaccumtopic->dataset_event_callback && vaccumtopic->dataset_event_callback != datasetEvent)
+    {
+        vaccumtopic->dataset_event_callback = datasetEvent;
+    }
+
+    exos_dataset_handle_t *linefollow = &handle->linefollow;
+    linefollow->user_context = NULL; //user defined
+    linefollow->user_tag = 0; //user defined
+    //handle online download of the library
+    if(NULL != linefollow->dataset_event_callback && linefollow->dataset_event_callback != datasetEvent)
+    {
+        linefollow->dataset_event_callback = datasetEvent;
+    }
+
+    exos_dataset_handle_t *linestatus = &handle->linestatus;
+    linestatus->user_context = NULL; //user defined
+    linestatus->user_tag = 0; //user defined
+    //handle online download of the library
+    if(NULL != linestatus->dataset_event_callback && linestatus->dataset_event_callback != datasetEvent)
+    {
+        linestatus->dataset_event_callback = datasetEvent;
+    }
+
     //unregister on disable
     if (inst->_state && !inst->Enable)
     {
@@ -245,12 +320,15 @@ _BUR_PUBLIC void ros_topics_typCyclic(struct ros_topics_typCyclic *inst)
         EXOS_ASSERT_OK(exos_dataset_connect(odemetry_dataset, EXOS_DATASET_PUBLISH, datasetEvent));
         EXOS_ASSERT_OK(exos_dataset_connect(twist_dataset, EXOS_DATASET_SUBSCRIBE, datasetEvent));
         EXOS_ASSERT_OK(exos_dataset_connect(config_dataset, EXOS_DATASET_SUBSCRIBE, datasetEvent));
+        EXOS_ASSERT_OK(exos_dataset_connect(encoder_dataset, EXOS_DATASET_PUBLISH, datasetEvent));
+        EXOS_ASSERT_OK(exos_dataset_connect(vaccumtopic, EXOS_DATASET_SUBSCRIBE, datasetEvent));
+        EXOS_ASSERT_OK(exos_dataset_connect(linefollow, EXOS_DATASET_SUBSCRIBE, datasetEvent));
+        EXOS_ASSERT_OK(exos_dataset_connect(linestatus, EXOS_DATASET_PUBLISH, datasetEvent));
 
         inst->Active = true;
         break;
 
     case 100:
-	
     case 101:
         if (inst->Start)
         {
@@ -269,10 +347,21 @@ _BUR_PUBLIC void ros_topics_typCyclic(struct ros_topics_typCyclic *inst)
         //put your cyclic code here!
 
         //publish the odemetry_dataset dataset as soon as there are changes
-        if (0 != memcmp(&inst->pros_topics_typ->odemetry, &data->odemetry, sizeof(data->odemetry)))
-        {
+        
         memcpy(&data->odemetry, &inst->pros_topics_typ->odemetry, sizeof(data->odemetry));
         exos_dataset_publish(odemetry_dataset);
+        
+        //publish the encoder_dataset dataset as soon as there are changes
+        if (0 != memcmp(&inst->pros_topics_typ->encoder, &data->encoder, sizeof(data->encoder)))
+        {
+            memcpy(&data->encoder, &inst->pros_topics_typ->encoder, sizeof(data->encoder));
+            exos_dataset_publish(encoder_dataset);
+        }
+        //publish the linestatus dataset as soon as there are changes
+        if (0 != memcmp(&inst->pros_topics_typ->lineStatus, &data->lineStatus, sizeof(data->lineStatus)))
+        {
+        memcpy(&data->lineStatus, &inst->pros_topics_typ->lineStatus, sizeof(data->lineStatus));
+        exos_dataset_publish(linestatus);
         }
 
         break;

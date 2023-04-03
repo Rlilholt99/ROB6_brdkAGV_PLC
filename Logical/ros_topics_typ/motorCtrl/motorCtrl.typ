@@ -70,4 +70,8 @@ TYPE
 	END_STRUCT;
 	common_typ : 	STRUCT 
 	END_STRUCT;
+	suction_typ : 	STRUCT 
+		valveEnable : BOOL;
+		motorEnable : BOOL;
+	END_STRUCT;
 END_TYPE

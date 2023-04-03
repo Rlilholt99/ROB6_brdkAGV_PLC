@@ -120,6 +120,12 @@ class ros_topics_typEventHandler(_object):
 
     def on_change_odemetry(self):
         return _libros_topics_typ.ros_topics_typEventHandler_on_change_odemetry(self)
+
+    def on_change_encoder(self):
+        return _libros_topics_typ.ros_topics_typEventHandler_on_change_encoder(self)
+
+    def on_change_lineStatus(self):
+        return _libros_topics_typ.ros_topics_typEventHandler_on_change_lineStatus(self)
     __swig_destroy__ = _libros_topics_typ.delete_ros_topics_typEventHandler
     __del__ = lambda self: None
     __swig_setmethods__["ros_topics_typ_datamodel"] = _libros_topics_typ.ros_topics_typEventHandler_ros_topics_typ_datamodel_set
@@ -148,6 +154,114 @@ ros_topics_typEventHandler_swigregister(ros_topics_typEventHandler)
 def add_event_handler(ros_topics_typ_datamodel, handler):
     return _libros_topics_typ.add_event_handler(ros_topics_typ_datamodel, handler)
 add_event_handler = _libros_topics_typ.add_event_handler
+class ros_lineStatus(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ros_lineStatus, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, ros_lineStatus, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["lineStatusCode"] = _libros_topics_typ.ros_lineStatus_lineStatusCode_set
+    __swig_getmethods__["lineStatusCode"] = _libros_topics_typ.ros_lineStatus_lineStatusCode_get
+    if _newclass:
+        lineStatusCode = _swig_property(_libros_topics_typ.ros_lineStatus_lineStatusCode_get, _libros_topics_typ.ros_lineStatus_lineStatusCode_set)
+
+    def __init__(self):
+        this = _libros_topics_typ.new_ros_lineStatus()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _libros_topics_typ.delete_ros_lineStatus
+    __del__ = lambda self: None
+ros_lineStatus_swigregister = _libros_topics_typ.ros_lineStatus_swigregister
+ros_lineStatus_swigregister(ros_lineStatus)
+
+class ros_lineMode(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ros_lineMode, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, ros_lineMode, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["lineMode"] = _libros_topics_typ.ros_lineMode_lineMode_set
+    __swig_getmethods__["lineMode"] = _libros_topics_typ.ros_lineMode_lineMode_get
+    if _newclass:
+        lineMode = _swig_property(_libros_topics_typ.ros_lineMode_lineMode_get, _libros_topics_typ.ros_lineMode_lineMode_set)
+    __swig_setmethods__["lineSharpTurn"] = _libros_topics_typ.ros_lineMode_lineSharpTurn_set
+    __swig_getmethods__["lineSharpTurn"] = _libros_topics_typ.ros_lineMode_lineSharpTurn_get
+    if _newclass:
+        lineSharpTurn = _swig_property(_libros_topics_typ.ros_lineMode_lineSharpTurn_get, _libros_topics_typ.ros_lineMode_lineSharpTurn_set)
+    __swig_setmethods__["lineHoldRight"] = _libros_topics_typ.ros_lineMode_lineHoldRight_set
+    __swig_getmethods__["lineHoldRight"] = _libros_topics_typ.ros_lineMode_lineHoldRight_get
+    if _newclass:
+        lineHoldRight = _swig_property(_libros_topics_typ.ros_lineMode_lineHoldRight_get, _libros_topics_typ.ros_lineMode_lineHoldRight_set)
+    __swig_setmethods__["lineForward"] = _libros_topics_typ.ros_lineMode_lineForward_set
+    __swig_getmethods__["lineForward"] = _libros_topics_typ.ros_lineMode_lineForward_get
+    if _newclass:
+        lineForward = _swig_property(_libros_topics_typ.ros_lineMode_lineForward_get, _libros_topics_typ.ros_lineMode_lineForward_set)
+
+    def __init__(self):
+        this = _libros_topics_typ.new_ros_lineMode()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _libros_topics_typ.delete_ros_lineMode
+    __del__ = lambda self: None
+ros_lineMode_swigregister = _libros_topics_typ.ros_lineMode_swigregister
+ros_lineMode_swigregister(ros_lineMode)
+
+class ros_armBools(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ros_armBools, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, ros_armBools, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["vaccumValve"] = _libros_topics_typ.ros_armBools_vaccumValve_set
+    __swig_getmethods__["vaccumValve"] = _libros_topics_typ.ros_armBools_vaccumValve_get
+    if _newclass:
+        vaccumValve = _swig_property(_libros_topics_typ.ros_armBools_vaccumValve_get, _libros_topics_typ.ros_armBools_vaccumValve_set)
+    __swig_setmethods__["vaccumMotor"] = _libros_topics_typ.ros_armBools_vaccumMotor_set
+    __swig_getmethods__["vaccumMotor"] = _libros_topics_typ.ros_armBools_vaccumMotor_get
+    if _newclass:
+        vaccumMotor = _swig_property(_libros_topics_typ.ros_armBools_vaccumMotor_get, _libros_topics_typ.ros_armBools_vaccumMotor_set)
+
+    def __init__(self):
+        this = _libros_topics_typ.new_ros_armBools()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _libros_topics_typ.delete_ros_armBools
+    __del__ = lambda self: None
+ros_armBools_swigregister = _libros_topics_typ.ros_armBools_swigregister
+ros_armBools_swigregister(ros_armBools)
+
+class ros_encoder(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ros_encoder, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, ros_encoder, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["encoder1"] = _libros_topics_typ.ros_encoder_encoder1_set
+    __swig_getmethods__["encoder1"] = _libros_topics_typ.ros_encoder_encoder1_get
+    if _newclass:
+        encoder1 = _swig_property(_libros_topics_typ.ros_encoder_encoder1_get, _libros_topics_typ.ros_encoder_encoder1_set)
+    __swig_setmethods__["encoder2"] = _libros_topics_typ.ros_encoder_encoder2_set
+    __swig_getmethods__["encoder2"] = _libros_topics_typ.ros_encoder_encoder2_get
+    if _newclass:
+        encoder2 = _swig_property(_libros_topics_typ.ros_encoder_encoder2_get, _libros_topics_typ.ros_encoder_encoder2_set)
+
+    def __init__(self):
+        this = _libros_topics_typ.new_ros_encoder()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _libros_topics_typ.delete_ros_encoder
+    __del__ = lambda self: None
+ros_encoder_swigregister = _libros_topics_typ.ros_encoder_swigregister
+ros_encoder_swigregister(ros_encoder)
+
 class ros_config_typ(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, ros_config_typ, name, value)
@@ -533,6 +647,114 @@ class libros_topics_typconfig_t(_object):
 libros_topics_typconfig_t_swigregister = _libros_topics_typ.libros_topics_typconfig_t_swigregister
 libros_topics_typconfig_t_swigregister(libros_topics_typconfig_t)
 
+class libros_topics_typencoder_t(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, libros_topics_typencoder_t, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, libros_topics_typencoder_t, name)
+    __repr__ = _swig_repr
+
+    def on_change(self):
+        return _libros_topics_typ.libros_topics_typencoder_t_on_change(self)
+    __swig_setmethods__["nettime"] = _libros_topics_typ.libros_topics_typencoder_t_nettime_set
+    __swig_getmethods__["nettime"] = _libros_topics_typ.libros_topics_typencoder_t_nettime_get
+    if _newclass:
+        nettime = _swig_property(_libros_topics_typ.libros_topics_typencoder_t_nettime_get, _libros_topics_typ.libros_topics_typencoder_t_nettime_set)
+    __swig_setmethods__["value"] = _libros_topics_typ.libros_topics_typencoder_t_value_set
+    __swig_getmethods__["value"] = _libros_topics_typ.libros_topics_typencoder_t_value_get
+    if _newclass:
+        value = _swig_property(_libros_topics_typ.libros_topics_typencoder_t_value_get, _libros_topics_typ.libros_topics_typencoder_t_value_set)
+
+    def __init__(self):
+        this = _libros_topics_typ.new_libros_topics_typencoder_t()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _libros_topics_typ.delete_libros_topics_typencoder_t
+    __del__ = lambda self: None
+libros_topics_typencoder_t_swigregister = _libros_topics_typ.libros_topics_typencoder_t_swigregister
+libros_topics_typencoder_t_swigregister(libros_topics_typencoder_t)
+
+class libros_topics_typvaccumTopic_t(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, libros_topics_typvaccumTopic_t, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, libros_topics_typvaccumTopic_t, name)
+    __repr__ = _swig_repr
+
+    def publish(self):
+        return _libros_topics_typ.libros_topics_typvaccumTopic_t_publish(self)
+    __swig_setmethods__["value"] = _libros_topics_typ.libros_topics_typvaccumTopic_t_value_set
+    __swig_getmethods__["value"] = _libros_topics_typ.libros_topics_typvaccumTopic_t_value_get
+    if _newclass:
+        value = _swig_property(_libros_topics_typ.libros_topics_typvaccumTopic_t_value_get, _libros_topics_typ.libros_topics_typvaccumTopic_t_value_set)
+
+    def __init__(self):
+        this = _libros_topics_typ.new_libros_topics_typvaccumTopic_t()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _libros_topics_typ.delete_libros_topics_typvaccumTopic_t
+    __del__ = lambda self: None
+libros_topics_typvaccumTopic_t_swigregister = _libros_topics_typ.libros_topics_typvaccumTopic_t_swigregister
+libros_topics_typvaccumTopic_t_swigregister(libros_topics_typvaccumTopic_t)
+
+class libros_topics_typlineFollow_t(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, libros_topics_typlineFollow_t, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, libros_topics_typlineFollow_t, name)
+    __repr__ = _swig_repr
+
+    def publish(self):
+        return _libros_topics_typ.libros_topics_typlineFollow_t_publish(self)
+    __swig_setmethods__["value"] = _libros_topics_typ.libros_topics_typlineFollow_t_value_set
+    __swig_getmethods__["value"] = _libros_topics_typ.libros_topics_typlineFollow_t_value_get
+    if _newclass:
+        value = _swig_property(_libros_topics_typ.libros_topics_typlineFollow_t_value_get, _libros_topics_typ.libros_topics_typlineFollow_t_value_set)
+
+    def __init__(self):
+        this = _libros_topics_typ.new_libros_topics_typlineFollow_t()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _libros_topics_typ.delete_libros_topics_typlineFollow_t
+    __del__ = lambda self: None
+libros_topics_typlineFollow_t_swigregister = _libros_topics_typ.libros_topics_typlineFollow_t_swigregister
+libros_topics_typlineFollow_t_swigregister(libros_topics_typlineFollow_t)
+
+class libros_topics_typlineStatus_t(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, libros_topics_typlineStatus_t, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, libros_topics_typlineStatus_t, name)
+    __repr__ = _swig_repr
+
+    def on_change(self):
+        return _libros_topics_typ.libros_topics_typlineStatus_t_on_change(self)
+    __swig_setmethods__["nettime"] = _libros_topics_typ.libros_topics_typlineStatus_t_nettime_set
+    __swig_getmethods__["nettime"] = _libros_topics_typ.libros_topics_typlineStatus_t_nettime_get
+    if _newclass:
+        nettime = _swig_property(_libros_topics_typ.libros_topics_typlineStatus_t_nettime_get, _libros_topics_typ.libros_topics_typlineStatus_t_nettime_set)
+    __swig_setmethods__["value"] = _libros_topics_typ.libros_topics_typlineStatus_t_value_set
+    __swig_getmethods__["value"] = _libros_topics_typ.libros_topics_typlineStatus_t_value_get
+    if _newclass:
+        value = _swig_property(_libros_topics_typ.libros_topics_typlineStatus_t_value_get, _libros_topics_typ.libros_topics_typlineStatus_t_value_set)
+
+    def __init__(self):
+        this = _libros_topics_typ.new_libros_topics_typlineStatus_t()
+        try:
+            self.this.append(this)
+        except __builtin__.Exception:
+            self.this = this
+    __swig_destroy__ = _libros_topics_typ.delete_libros_topics_typlineStatus_t
+    __del__ = lambda self: None
+libros_topics_typlineStatus_t_swigregister = _libros_topics_typ.libros_topics_typlineStatus_t_swigregister
+libros_topics_typlineStatus_t_swigregister(libros_topics_typlineStatus_t)
+
 class libros_topics_typ_log_t(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, libros_topics_typ_log_t, name, value)
@@ -626,6 +848,22 @@ class libros_topics_typ_t(_object):
     __swig_getmethods__["config"] = _libros_topics_typ.libros_topics_typ_t_config_get
     if _newclass:
         config = _swig_property(_libros_topics_typ.libros_topics_typ_t_config_get, _libros_topics_typ.libros_topics_typ_t_config_set)
+    __swig_setmethods__["encoder"] = _libros_topics_typ.libros_topics_typ_t_encoder_set
+    __swig_getmethods__["encoder"] = _libros_topics_typ.libros_topics_typ_t_encoder_get
+    if _newclass:
+        encoder = _swig_property(_libros_topics_typ.libros_topics_typ_t_encoder_get, _libros_topics_typ.libros_topics_typ_t_encoder_set)
+    __swig_setmethods__["vaccumTopic"] = _libros_topics_typ.libros_topics_typ_t_vaccumTopic_set
+    __swig_getmethods__["vaccumTopic"] = _libros_topics_typ.libros_topics_typ_t_vaccumTopic_get
+    if _newclass:
+        vaccumTopic = _swig_property(_libros_topics_typ.libros_topics_typ_t_vaccumTopic_get, _libros_topics_typ.libros_topics_typ_t_vaccumTopic_set)
+    __swig_setmethods__["lineFollow"] = _libros_topics_typ.libros_topics_typ_t_lineFollow_set
+    __swig_getmethods__["lineFollow"] = _libros_topics_typ.libros_topics_typ_t_lineFollow_get
+    if _newclass:
+        lineFollow = _swig_property(_libros_topics_typ.libros_topics_typ_t_lineFollow_get, _libros_topics_typ.libros_topics_typ_t_lineFollow_set)
+    __swig_setmethods__["lineStatus"] = _libros_topics_typ.libros_topics_typ_t_lineStatus_set
+    __swig_getmethods__["lineStatus"] = _libros_topics_typ.libros_topics_typ_t_lineStatus_get
+    if _newclass:
+        lineStatus = _swig_property(_libros_topics_typ.libros_topics_typ_t_lineStatus_get, _libros_topics_typ.libros_topics_typ_t_lineStatus_set)
 
     def __init__(self):
         this = _libros_topics_typ.new_libros_topics_typ_t()

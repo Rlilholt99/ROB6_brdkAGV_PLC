@@ -27,6 +27,32 @@ typedef struct libros_topics_typconfig
     ros_config_typ value;
 } libros_topics_typconfig_t;
 
+typedef struct libros_topics_typencoder
+{
+    libros_topics_typ_event_cb on_change;
+    int32_t nettime;
+    ros_encoder value;
+} libros_topics_typencoder_t;
+
+typedef struct libros_topics_typvaccumTopic
+{
+    libros_topics_typ_method_fn publish;
+    ros_armBools value;
+} libros_topics_typvaccumTopic_t;
+
+typedef struct libros_topics_typlineFollow
+{
+    libros_topics_typ_method_fn publish;
+    ros_lineMode value;
+} libros_topics_typlineFollow_t;
+
+typedef struct libros_topics_typlineStatus
+{
+    libros_topics_typ_event_cb on_change;
+    int32_t nettime;
+    ros_lineStatus value;
+} libros_topics_typlineStatus_t;
+
 typedef struct libros_topics_typ_log
 {
     libros_topics_typ_log_fn error;
@@ -54,6 +80,10 @@ typedef struct libros_topics_typ
     libros_topics_typodemetry_t odemetry;
     libros_topics_typtwist_t twist;
     libros_topics_typconfig_t config;
+    libros_topics_typencoder_t encoder;
+    libros_topics_typvaccumTopic_t vaccumTopic;
+    libros_topics_typlineFollow_t lineFollow;
+    libros_topics_typlineStatus_t lineStatus;
 } libros_topics_typ_t;
 
 #ifdef __cplusplus

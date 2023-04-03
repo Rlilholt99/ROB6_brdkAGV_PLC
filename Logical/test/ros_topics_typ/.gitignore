@@ -1,8 +1,0 @@
-build/
-*.bak
-*.ori
-exos-comp-*.deb
-__pycache__/
-*.pyc
-_libros_topics_typ.so
-libros_topics_typ.py

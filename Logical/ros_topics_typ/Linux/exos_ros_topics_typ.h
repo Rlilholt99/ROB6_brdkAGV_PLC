@@ -12,6 +12,36 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+typedef struct ros_lineStatus
+{
+    int16_t lineStatusCode;
+
+} ros_lineStatus;
+
+typedef struct ros_lineMode
+{
+    bool lineMode;
+    bool lineSharpTurn;
+    bool lineHoldRight;
+    bool lineForward;
+    bool lineInterSection;
+
+} ros_lineMode;
+
+typedef struct ros_armBools
+{
+    bool vaccumValve;
+    bool vaccumMotor;
+
+} ros_armBools;
+
+typedef struct ros_encoder
+{
+    int16_t encoder1;
+    int16_t encoder2;
+
+} ros_encoder;
+
 typedef struct ros_config_typ
 {
     double maxSpeed;
@@ -99,6 +129,10 @@ typedef struct ros_topics_typ
     struct ros_topic_odemety_typ odemetry; //PUB
     struct ros_topic_twist_typ twist; //SUB
     struct ros_config_typ config; //SUB
+    struct ros_encoder encoder; //PUB
+    struct ros_armBools vaccumTopic; //SUB
+    struct ros_lineMode lineFollow; //SUB
+    struct ros_lineStatus lineStatus; //PUB
 
 } ros_topics_typ;
 

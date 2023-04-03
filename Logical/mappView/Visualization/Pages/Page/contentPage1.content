@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Content id="contentPage1" height="600" width="800" xmlns="http://www.br-automation.com/iat2015/contentDefinition/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <Widgets>
-    <Widget xsi:type="widgets.brease.Label" id="Label1" top="100" left="160" zIndex="0" text="Speed" />
-    <Widget xsi:type="widgets.brease.NumericOutput" id="NumericOutput1" top="80" left="480" zIndex="1" />
-    <Widget xsi:type="widgets.brease.Image" id="Image1" top="300" left="160" width="40" height="60" zIndex="2" image="Media/got%20milk.jpeg" />
-  </Widgets>
-</Content>

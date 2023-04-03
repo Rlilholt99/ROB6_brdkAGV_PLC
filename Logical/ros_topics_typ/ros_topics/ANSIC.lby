@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<?AutomationStudio FileVersion="4.10"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?AutomationStudio FileVersion="4.9"?>
 <Library SubType="ANSIC" xmlns="http://br-automation.co.at/AS/Library">
   <Files>
     <File Description="ros_topics_typ datamodel declaration">ros_topics_typ.typ</File>

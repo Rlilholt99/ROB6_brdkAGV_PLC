@@ -1,4 +1,8 @@
 VAR
+	errOld : REAL;
+	iAlive : USINT;
+	turnSwitch : USINT;
+	counter : USINT;
 	ros_topics_typInit_0 : ros_topics_typInit;
 	ros_topics_typCyclic_0 : ros_topics_typCyclic;
 	ros_topics_typExit_0 : ros_topics_typExit;
@@ -15,4 +19,15 @@ VAR
 	k : USINT;
 	i : USINT;
 	ExDataConnectionInfo_0 : ExDataConnectionInfo;
+	suction : suction_typ;
+	mathCheck2 : REAL;
+	moveForwardTimer : TON;
+	forwardTimer : TON;
+	mathCheck1 : REAL;
+	counter2 : USINT;
+	lineTest : BOOL;
+	goalOrientation : REAL;
+	startOrientation : REAL;
+	lastOrientation : REAL;
+	remainingOrientation : REAL;
 END_VAR

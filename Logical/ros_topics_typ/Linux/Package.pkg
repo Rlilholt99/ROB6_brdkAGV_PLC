@@ -13,7 +13,5 @@
     <Object Type="File" Description="ros_topics_typ python module">libros_topics_typ.py</Object>
     <Object Type="File" Description="ros_topics_typ SWIG library">_libros_topics_typ.so</Object>
     <Object Type="File" Description="ros_topics_typ debian package">exos-comp-ros_topics_typ_1.0.0_amd64.deb</Object>
-    <Object Type="File" Description="Main python script">ros_topics_typ1.py</Object>
-    <Object Type="File" Description="Main python script">ros_topics_typ3.py</Object>
   </Objects>
 </Package>

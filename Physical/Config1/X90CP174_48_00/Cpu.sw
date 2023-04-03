@@ -3,7 +3,7 @@
 <SwConfiguration CpuAddress="SL1" xmlns="http://br-automation.co.at/AS/SwConfiguration">
   <TaskClass Name="Cyclic#1">
     <Task Name="motorCtrl" Source="ros_topics_typ.motorCtrl.prg" Memory="UserROM" Language="IEC" Debugging="true" />
-    <Task Name="VisionMain" Source="Package.VisionMain.prg" Memory="UserROM" Language="IEC" Debugging="true" Disabled="true" />
+    <Task Name="VisionMain" Source="Package.VisionMain.prg" Memory="UserROM" Language="IEC" Debugging="true" />
     <Task Name="WaterTank_" Source="" Memory="UserROM" Language="Binary" Debugging="true" />
   </TaskClass>
   <TaskClass Name="Cyclic#2" />

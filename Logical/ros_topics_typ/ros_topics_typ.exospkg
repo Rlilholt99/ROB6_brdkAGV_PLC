@@ -1,11 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ComponentPackage Version="2.1.0" ErrorHandling="Component" StartupTimeout="0">
+<?xml version="1.0" encoding="utf-8"?>
+<ComponentPackage Version="2.0.0" ErrorHandling="Component" StartupTimeout="0">
     <File FileName="Linux\ros_topics_typ.py" ChangeEvent="Restart"/>
     <File FileName="Linux\exos-comp-ros_topics_typ_1.0.0_amd64.deb" ChangeEvent="Reinstall"/>
     <Service Type="Install" Command="dpkg -i exos-comp-ros_topics_typ_1.0.0_amd64.deb"/>
     <Service Type="Remove" Command="dpkg --purge exos-comp-ros_topics_typ"/>
     <Service Type="Startup" Command="cp ros_topics_typ.py /home/user/brdkAGV_linux/ros_ws/src/motor_control_exos/motor_control_exos/motor_control_exos.py"/>
-    <Service Type="Runtime" Command="" WorkingDirectory="/home/user/brdkAGV_linux/ros_ws"/>
     <DatamodelInstance Name="ros_topics_typ_0"/>
     <Build>
         <GenerateDatamodel FileName="ros_topics\ros_topics_typ.typ" TypeName="ros_topics_typ">
@@ -24,11 +23,12 @@
         </BuildCommand>
     </Build>
     <!-- ComponentGenerator info - do not change! -->
-    <ComponentGenerator Class="ExosComponentSWIG" Version="2.0.0">
+    <ComponentGenerator Class="ExosComponentSWIG" Version="2.0.1">
         <Option Name="exportLinux" Value="exos-comp-ros_topics_typ_1.0.0_amd64.deb,ros_topics_typ.py"/>
         <Option Name="templateAR" Value="c-api"/>
         <Option Name="typeName" Value="ros_topics_typ"/>
         <Option Name="typeFile" Value="ros_topics\ros_topics_typ.typ"/>
         <Option Name="SG4Includes" Value="ros_topics.h"/>
+        <Option Name="ComponentUpdate" Value="2.0.1"/>
     </ComponentGenerator>
 </ComponentPackage>

@@ -1,5 +1,7 @@
 # Use import and sys.path.insert if this .py file is moved.
 # The path should point to the directory containing _libros_topics_typ.so
+# import sys
+# sys.path.insert(1, 'ros_topics_typ/Linux/build')
 import sys
 sys.path.insert(1, '/home/user/ros_topics_typ/')
 import libros_topics_typ
@@ -12,15 +14,12 @@ from tf2_ros import TransformBroadcaster
 import tf_transformations
 from geometry_msgs.msg import Quaternion, Twist, TransformStamped
 from nav_msgs.msg import Odometry
+
 import traceback
 
 
 #delete me 
-from std_msgs.msg import String
-
-
-
-__author__ = "buhl@brommeweb.dk (Jacob Buh)"
+from std_msgs.msg import String, Int64, Int8MultiArray, Bool, Int64MultiArray, Int8, Int32
 
 """
 libros_topics_typ datamodel features:
@@ -42,7 +41,6 @@ def user callbacks in class ros_topics_typEventHandler:
     on_connected
     on_disconnected
     on_operational
-    on_change_odemetry
 
 boolean values:
     ros_topics_typ_datamodel.is_connected
@@ -68,12 +66,45 @@ dataset twist:
 dataset config:
     ros_topics_typ_datamodel.config.publish()
     ros_topics_typ_datamodel.config.value : (ros_config_typ)  actual dataset values
+
+dataset encoder:
+    ros_topics_typEventHandler:on_change_encoder : void(void) user callback function
+    ros_topics_typ_datamodel.encoder.nettime : (int32_t) nettime @ time of publish
+    ros_topics_typ_datamodel.encoder.value : (ros_encoder)  actual dataset values
+
+dataset vaccumTopic:
+    ros_topics_typ_datamodel.vaccumTopic.publish()
+    ros_topics_typ_datamodel.vaccumTopic.value : (ros_armBools)  actual dataset values
+
+dataset lineFollow:
+    ros_topics_typ_datamodel.lineFollow.publish()
+    ros_topics_typ_datamodel.lineFollow.value : (ros_lineMode)  actual dataset values
+
+dataset lineStatus:
+    ros_topics_typEventHandler:on_change_lineStatus : void(void) user callback function
+    ros_topics_typ_datamodel.lineStatus.nettime : (int32_t) nettime @ time of publish
+    ros_topics_typ_datamodel.lineStatus.value : (ros_lineStatus)  actual dataset values
 """
+
 gUpdateTwist = False
 gTwist = Twist()
+gPublishOnce = True
+gUpdateVaccum = False
+gVaccum = Bool()
+gLine = Bool()
+gSharpTurn = Bool()
+gHoldRight = Bool()
+gForward = Bool()
+gUpdateLine = False
+gInterSection = Bool()
+gUpdateValve = False
+gValve = Bool()
 
 
- 
+
+
+
+
 class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
 
     def __init__(self,node):
@@ -90,7 +121,7 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
     def on_disconnected(self):
         #self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, 0.0, 0.0)
         self.node.get_logger().info("Disconnected to PLC");
-        
+
     def on_operational(self):
         self.node.get_logger().info("Communication is operational");   
         self.ros_topics_typ_datamodel.config.value.maxSpeed = float(self.node.get_parameter("max_speed")._value)
@@ -98,22 +129,33 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         self.ros_topics_typ_datamodel.config.value.baseWidth = float(self.node.get_parameter("base_width")._value)
         self.ros_topics_typ_datamodel.config.publish()
         #self.TICKS_PER_METER = float(rospy.get_param("~tick_per_meter", "105860"))
-        
+
     def on_change_odemetry(self):
-        #print("Odemetry has changed")
-        print("odometry change registered")
-        # self.ros_topics_typ_datamodel.log.verbose("python dataset odemetry changed!")
-        self.ros_topics_typ_datamodel.log.info("on_change: ros_topics_typ_datamodel.odemetry: " + str(self.ros_topics_typ_datamodel.odemetry.value))
-        #self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x, self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z) 
+        
+
+        
         self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
+       
         #self.node.sendTransform(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
         
 
-        # odometryGlobal[0] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x
-        # odometryGlobal[1] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y 
-        # odometryGlobal[2] = self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z 
-        # odometryGlobal[3] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.linear.x 
-        # odometryGlobal[4] = self.ros_topics_typ_datamodel.odemetry.value.twist.twist.angular.z
+
+    
+    def on_change_encoder(self):
+        self.ros_topics_typ_datamodel.log.verbose("python dataset encoder changed!")
+        #print("encoder change") 
+        #self.node.publish_encoder(1 ,1)
+        #self.node.publish_encoder(self.ros_topics_typ_datamodel.encoder.value.encoder1, self.ros_topics_typ_datamodel.encoder.value.encoder2)
+        # self.ros_topics_typ_datamodel.log.debug("on_change: ros_topics_typ_datamodel.encoder: " + str(self.ros_topics_typ_datamodel.encoder.value))
+        
+    
+    def on_change_lineStatus(self):
+        #self.ros_topics_typ_datamodel.log.verbose("python dataset lineStatus changed!")
+        # self.ros_topics_typ_datamodel.log.debug("on_change: ros_topics_typ_datamodel.lineStatus: " + str(self.ros_topics_typ_datamodel.lineStatus.value))
+        self.node.publish_LineStatus(self.ros_topics_typ_datamodel.lineStatus.value.lineStatusCode)
+        
+        # Your code here...
+    
 
 
 class exOsThread (threading.Thread):
@@ -137,24 +179,51 @@ class exOsThread (threading.Thread):
             #self.node_.get_logger().debug('Write to angular z: %f and linear x: %f' % (twist.linear.x,twist.angular.z))
         else:
             self.node_.get_logger().info("Not connected to PLC")
-            
+      
+    def sendCmdVac(self):
+        global gVaccum
+        if self.ros_topics_typ_datamodel.is_connected:
+            self.ros_topics_typ_datamodel.vaccumTopic.value.vaccumMotor = gVaccum
+            self.ros_topics_typ_datamodel.vaccumTopic.value.vaccumValve = gValve
+            self.ros_topics_typ_datamodel.vaccumTopic.publish()
+            #self.node_.get_logger().debug('Write to angular z: %f and linear x: %f' % (twist.linear.x,twist.angular.z))
+        else:
+            self.node_.get_logger().info("Not connected to PLC")
+    
+    def sendCmdLine(self):
+        global gLine, gSharpTurn, gHoldRight, gForward, gInterSection
+        if self.ros_topics_typ_datamodel.is_connected:
+            self.ros_topics_typ_datamodel.lineFollow.value.lineMode = gLine
+            self.ros_topics_typ_datamodel.lineFollow.value.lineSharpTurn = gSharpTurn
+            self.ros_topics_typ_datamodel.lineFollow.value.lineHoldRight = gHoldRight
+            self.ros_topics_typ_datamodel.lineFollow.value.lineForward = gForward
+            self.ros_topics_typ_datamodel.lineFollow.value.lineInterSection = gInterSection
+            self.ros_topics_typ_datamodel.lineFollow.publish()
+           
     def run (self):
-        global gUpdateTwist, odometryGlobal
+        global gUpdateTwist, odometryGlobal, gUpdateVaccum, gUpdateLine
         oldtime = 0
         while(True):
             nowtime = time.time_ns()
             if gUpdateTwist:
                 gUpdateTwist = False
+                gUpdateVaccum = False
                 #motorCtrl.publish_odom(odometryGlobal[0],odometryGlobal[1], odometryGlobal[2], odometryGlobal[3], odometryGlobal[4])
                 
                 #print("Run [ns]: %dms %f %f" %((nowtime-oldtime)/1000000,gTwist.linear.x,gTwist.angular.z))
+                
                 self.sendCmdVel()
+            elif(gUpdateVaccum):
+                gUpdateVaccum = False
+                self.sendCmdVac()
+            elif gUpdateLine:
+                gUpdateLine = False
+                self.sendCmdLine()
+
             self.ros_topics_typ_datamodel.process()
             oldtime = nowtime
             
             
-
-
 
 
 class motorCtrl(Node):
@@ -170,21 +239,33 @@ class motorCtrl(Node):
         self.declare_parameters(
             namespace='',
             parameters=[
-                ('min_speed', -0.2), #m/s
-                ('max_speed', 0.2), #m/s
+                ('min_speed', -0.4), #m/s
+                ('max_speed', 0.4), #m/s
                 ('ticks_per_meter', 105860), #encoder ticks per meter driven 
-                ('base_width', 0.271), #distance between the middle of the wheels in meters
-                ('vel_topic', 'cmd_vel')
+                ('base_width', 0.303), #distance between the middle of the wheels in meters
+                ('vel_topic', 'cmd_vel'),
+                ('vaccumTopic', 'vaccumControl'),
+                ('lineFollow', 'cmd_lineFollow')
             ]
         )
-
+        self.LINE_TOPIC = '/'+self.get_parameter("lineFollow")._value
         self.VEL_TOPIC = '/'+self.get_parameter("vel_topic")._value    
         self.last_set_speed_time = self.get_clock().now()
         self.get_logger().info('topic %s' % self.VEL_TOPIC)
         self.subscription = self.create_subscription(Twist,self.VEL_TOPIC, self.vel_callback,0)
         self.subscription
 
+        self.VAC_TOPIC = '/'+self.get_parameter("vaccumTopic")._value
+
+        self.vacSubscription = self.create_subscription(Int8,self.VAC_TOPIC,self.vaccum_callback,0)
+        self.lineSubscription = self.create_subscription(Int32,self.LINE_TOPIC,self.line_callback,0)
+        
+
         self.publisher_ = self.create_publisher(Odometry, '/odom', 10)
+        self.encoder1Publish = self.create_publisher(Int64, '/encoder1',10)
+        self.encoder2Publish = self.create_publisher(Int64, '/encoder2',10)
+        self.linePublisher = self.create_publisher(Int32, '/lineStatus',10)
+
         #self.publishing = self.create_publisher(String, '/topic', 10)
 
         #self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
@@ -239,7 +320,20 @@ class motorCtrl(Node):
     #     # Send the transformation
     #     self.br.sendTransform(t)
 
+    
+    def publish_encoder(self,encoder1,encoder2):
+        try:
+            enc1 = Int64()
+            enc2 = Int64()
+            enc1.data = int(encoder1)#int(encoder1)
+            enc2.data = int(encoder2)#int(encoder2)
 
+            #self.encoder1Publish.publish(enc1)
+            #self.encoder2Publish.publish(enc2)
+            #print("/encoder published!")
+        except Exception as e:
+            print(traceback.format_exc())
+    
     def publish_odom(self, cur_x, cur_y, cur_theta):#, vx, vth
         try:
             #quat = tf_transformations.quaternion_from_euler(pi, 0, cur_theta)
@@ -279,6 +373,14 @@ class motorCtrl(Node):
      
         except Exception as e:
             print(traceback.format_exc())
+    
+    def publish_LineStatus(self, statusCode):
+        try:
+            status = Int64()
+            status.data = statusCode
+            self.linePublisher.publish(status)
+        except Exception as e:
+            print(traceback.format_exc())
              
     def vel_callback(self, twist):
         global gTwist,gUpdateTwist
@@ -286,7 +388,90 @@ class motorCtrl(Node):
         gTwist = twist
         gUpdateTwist = True
         #self.exOs.sendCmdVel(twist) 
+    
+
+    def vaccum_callback(self,vaccum):
+        global gVaccum,gUpdateVaccum,gValve,gUpdateValve
+        if (vaccum.data == 0):
         
+            gVaccum = False
+            gValve = False
+            gUpdateVaccum = True
+            UpdateValve = True
+        elif (vaccum.data == 1):
+            gVaccum = True
+            gValve = False
+            gUpdateVaccum = True
+            UpdateValve = True
+        elif (vaccum.data == 2):
+            gVaccum = True
+            gValve = True
+            gUpdateVaccum = True
+            UpdateValve = True
+        elif (vaccum.data == 3):
+            gVaccum = False
+            gValve = True
+            gUpdateVaccum = True
+            UpdateValve = True
+        else:
+            gVaccum = False
+            gValve = False
+            gUpdateVaccum = True
+            UpdateValve = True
+        
+    def line_callback(self,line):
+        global gLine, gUpdateLine, gForward, gHoldRight, gSharpTurn, gInterSection
+        if (line.data == 0):
+            gLine = False
+            gForward = False
+            gHoldRight = False
+            gSharpTurn = False
+            gInterSection = False
+            gUpdateLine = True
+        elif (line.data == 1):
+            gLine = True
+            gForward = False
+            gHoldRight = False
+            gSharpTurn = False
+            gInterSection = False
+            gUpdateLine = True
+        elif (line.data == 2):
+            gLine = True
+            gForward = True
+            gHoldRight = False
+            gSharpTurn = False
+            gInterSection = False
+            gUpdateLine = True
+        elif(line.data == 3):
+            gLine = True
+            gForward = False
+            gHoldRight = True
+            gSharpTurn = False
+            gInterSection = True
+            gUpdateLine = True
+        elif(line.data == 4):
+            gLine = True
+            gForward = False
+            gHoldRight = False
+            gSharpTurn = True
+            gInterSection = False
+            gUpdateLine = True
+        elif(line.data == 5):
+            gLine = True
+            gForward = False
+            gHoldRight = False
+            gSharpTurn = False
+            gInterSection = True
+            gUpdateLine = True
+            
+        else:
+            gLine = False
+            gForward = False
+            gHoldRight = False
+            gSharpTurn = False
+            gInterSection = False
+            gUpdateLine = True
+
 
     # TODO: need clean shutdown so motors stop even if new msgs are arriving
     def destroy_node(self):
@@ -295,6 +480,18 @@ class motorCtrl(Node):
         self.ros_topics_typ_datamodel.disconnect()
         self.ros_topics_typ_datamodel.dispose()
         super().destroy_node()
+
+"""
+    def line_callback(self,line):
+        global gUpdateLine, gLine
+        if (line.data == True):
+            gUpdateLine = True
+            gLine = True
+        elif (line.data == False):
+            gUpdateLine = True
+            gLine = False
+"""
+
 
 def main(args=None):
     rclpy.init(args=args)
@@ -309,3 +506,39 @@ def main(args=None):
 if __name__ == "__main__":
     main()    
 
+
+
+
+
+
+
+"""
+ros_topics_typ_datamodel = libros_topics_typ.libros_topics_typ_init()
+
+handler = ros_topics_typEventHandler()
+libros_topics_typ.add_event_handler(ros_topics_typ_datamodel, handler)
+
+try:
+    ros_topics_typ_datamodel.connect()
+    while True:
+        ros_topics_typ_datamodel.process()
+        # if ros_topics_typ_datamodel.is_connected:
+            # ros_topics_typ_datamodel.twist.value. .. = .. 
+            # ros_topics_typ_datamodel.twist.publish()
+            
+            # ros_topics_typ_datamodel.config.value. .. = .. 
+            # ros_topics_typ_datamodel.config.publish()
+            
+            # ros_topics_typ_datamodel.vaccumTopic.value. .. = .. 
+            # ros_topics_typ_datamodel.vaccumTopic.publish()
+            
+            # ros_topics_typ_datamodel.lineFollow.value. .. = .. 
+            # ros_topics_typ_datamodel.lineFollow.publish()
+            
+except(KeyboardInterrupt, SystemExit):
+    ros_topics_typ_datamodel.log.success("Application terminated, shutting down")
+
+ros_topics_typ_datamodel.disconnect()
+ros_topics_typ_datamodel.dispose()
+
+"""
