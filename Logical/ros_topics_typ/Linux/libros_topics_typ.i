@@ -95,6 +95,10 @@ typedef struct ros_lineMode
     bool lineSharpTurn;
     bool lineHoldRight;
     bool lineForward;
+    bool lineInterSection;
+    bool lineDecision;
+    bool lineFast;
+    bool lineSlow;
 
 } ros_lineMode;
 

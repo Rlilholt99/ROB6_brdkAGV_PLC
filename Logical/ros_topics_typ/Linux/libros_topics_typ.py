@@ -198,6 +198,22 @@ class ros_lineMode(_object):
     __swig_getmethods__["lineForward"] = _libros_topics_typ.ros_lineMode_lineForward_get
     if _newclass:
         lineForward = _swig_property(_libros_topics_typ.ros_lineMode_lineForward_get, _libros_topics_typ.ros_lineMode_lineForward_set)
+    __swig_setmethods__["lineInterSection"] = _libros_topics_typ.ros_lineMode_lineInterSection_set
+    __swig_getmethods__["lineInterSection"] = _libros_topics_typ.ros_lineMode_lineInterSection_get
+    if _newclass:
+        lineInterSection = _swig_property(_libros_topics_typ.ros_lineMode_lineInterSection_get, _libros_topics_typ.ros_lineMode_lineInterSection_set)
+    __swig_setmethods__["lineDecision"] = _libros_topics_typ.ros_lineMode_lineDecision_set
+    __swig_getmethods__["lineDecision"] = _libros_topics_typ.ros_lineMode_lineDecision_get
+    if _newclass:
+        lineDecision = _swig_property(_libros_topics_typ.ros_lineMode_lineDecision_get, _libros_topics_typ.ros_lineMode_lineDecision_set)
+    __swig_setmethods__["lineFast"] = _libros_topics_typ.ros_lineMode_lineFast_set
+    __swig_getmethods__["lineFast"] = _libros_topics_typ.ros_lineMode_lineFast_get
+    if _newclass:
+        lineFast = _swig_property(_libros_topics_typ.ros_lineMode_lineFast_get, _libros_topics_typ.ros_lineMode_lineFast_set)
+    __swig_setmethods__["lineSlow"] = _libros_topics_typ.ros_lineMode_lineSlow_set
+    __swig_getmethods__["lineSlow"] = _libros_topics_typ.ros_lineMode_lineSlow_get
+    if _newclass:
+        lineSlow = _swig_property(_libros_topics_typ.ros_lineMode_lineSlow_get, _libros_topics_typ.ros_lineMode_lineSlow_set)
 
     def __init__(self):
         this = _libros_topics_typ.new_ros_lineMode()

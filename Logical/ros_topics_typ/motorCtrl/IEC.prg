@@ -6,5 +6,6 @@
     <File Description="ros_topics_typ variable declaration" Private="true">ros_topics_typ.var</File>
     <File Description="ros_topics_typ application">ros_topics_typ.st</File>
     <File>setupPointers.st</File>
+    <File>evaluateStatus.st</File>
   </Files>
 </Program>

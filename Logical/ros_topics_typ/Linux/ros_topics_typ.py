@@ -9,6 +9,7 @@ import threading
 from math import pi#, cos, sin
 import time
 import rclpy
+
 from rclpy.node import Node
 from tf2_ros import TransformBroadcaster
 import tf_transformations
@@ -19,7 +20,7 @@ import traceback
 
 
 #delete me 
-from std_msgs.msg import String, Int64, Int8MultiArray, Bool, Int64MultiArray, Int8, Int32
+from std_msgs.msg import String, Int64, Int8MultiArray, Bool, Int64MultiArray, Int8, Int32, Int16
 
 """
 libros_topics_typ datamodel features:
@@ -99,27 +100,31 @@ gUpdateLine = False
 gInterSection = Bool()
 gUpdateValve = False
 gValve = Bool()
-
-
-
+gDecision = Bool()
+gLineFast = Bool()
+gLineSlow = Bool()
+gDecision = False
+gLineSlow = False
+gLineFast = False
 
 
 
 class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
 
-    def __init__(self,node):
+    def __init__(self, node):
         libros_topics_typ.ros_topics_typEventHandler.__init__(self)
         self.node = node
         self.node.get_logger().info("Init ExOs eventhandler");
         self.node.get_logger().info("Test 6");
 
+
     def on_connected(self):
         self.ros_topics_typ_datamodel.log.success("python ros_topics_typ_datamodel connected!")
+        self.ros_topics_typ_datamodel.log.success("jeg har en fat dump truck xd dx")
         self.node.get_logger().info("Connected to PLC");
         self.ros_topics_typ_datamodel.log.info("Linux: Motor control exos is running")
 
     def on_disconnected(self):
-        #self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z, 0.0, 0.0)
         self.node.get_logger().info("Disconnected to PLC");
 
     def on_operational(self):
@@ -131,32 +136,21 @@ class ros_topics_typEventHandler(libros_topics_typ.ros_topics_typEventHandler):
         #self.TICKS_PER_METER = float(rospy.get_param("~tick_per_meter", "105860"))
 
     def on_change_odemetry(self):
-        
-
-        
         self.node.publish_odom(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
-       
-        #self.node.sendTransform(self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.x,self.ros_topics_typ_datamodel.odemetry.value.pose.pose.position.y, self.ros_topics_typ_datamodel.odemetry.value.pose.pose.orientation.z) 
-        
-
 
     
     def on_change_encoder(self):
         self.ros_topics_typ_datamodel.log.verbose("python dataset encoder changed!")
-        #print("encoder change") 
-        #self.node.publish_encoder(1 ,1)
-        #self.node.publish_encoder(self.ros_topics_typ_datamodel.encoder.value.encoder1, self.ros_topics_typ_datamodel.encoder.value.encoder2)
         # self.ros_topics_typ_datamodel.log.debug("on_change: ros_topics_typ_datamodel.encoder: " + str(self.ros_topics_typ_datamodel.encoder.value))
-        
-    
-    def on_change_lineStatus(self):
-        #self.ros_topics_typ_datamodel.log.verbose("python dataset lineStatus changed!")
-        # self.ros_topics_typ_datamodel.log.debug("on_change: ros_topics_typ_datamodel.lineStatus: " + str(self.ros_topics_typ_datamodel.lineStatus.value))
-        self.node.publish_LineStatus(self.ros_topics_typ_datamodel.lineStatus.value.lineStatusCode)
         
         # Your code here...
     
-
+    def on_change_lineStatus(self):
+        print("linestatus: ",self.ros_topics_typ_datamodel.lineStatus.value.lineStatusCode)
+        self.node.publish_LineStatus(self.ros_topics_typ_datamodel.lineStatus.value.lineStatusCode)
+        # self.ros_topics_typ_datamodel.log.debug("on_change: ros_topics_typ_datamodel.lineStatus: " + str(self.ros_topics_typ_datamodel.lineStatus.value))
+        
+        # Your code here...
 
 class exOsThread (threading.Thread):
 
@@ -191,14 +185,18 @@ class exOsThread (threading.Thread):
             self.node_.get_logger().info("Not connected to PLC")
     
     def sendCmdLine(self):
-        global gLine, gSharpTurn, gHoldRight, gForward, gInterSection
+        global gLine, gSharpTurn, gHoldRight, gForward, gInterSection, gDecision, gLineFast, gLineSlow
         if self.ros_topics_typ_datamodel.is_connected:
             self.ros_topics_typ_datamodel.lineFollow.value.lineMode = gLine
             self.ros_topics_typ_datamodel.lineFollow.value.lineSharpTurn = gSharpTurn
             self.ros_topics_typ_datamodel.lineFollow.value.lineHoldRight = gHoldRight
             self.ros_topics_typ_datamodel.lineFollow.value.lineForward = gForward
             self.ros_topics_typ_datamodel.lineFollow.value.lineInterSection = gInterSection
+            self.ros_topics_typ_datamodel.lineFollow.value.lineDecision = gDecision
+            self.ros_topics_typ_datamodel.lineFollow.value.lineFast = gLineFast
+            self.ros_topics_typ_datamodel.lineFollow.value.lineSlow = gLineSlow
             self.ros_topics_typ_datamodel.lineFollow.publish()
+
            
     def run (self):
         global gUpdateTwist, odometryGlobal, gUpdateVaccum, gUpdateLine
@@ -270,7 +268,7 @@ class motorCtrl(Node):
 
         #self.timer = self.create_timer(timer_period, self.publish_odom(odometryGlobal[0],odometryGlobal[1],odometryGlobal[2],odometryGlobal[3],odometryGlobal[4],))
         #self.timer = self.create_timer(timer_period, self.tester)
-        self.br = TransformBroadcaster(self)
+        #self.br = TransformBroadcaster(self)
 
         self.get_logger().info('max_speed %f' % self.get_parameter('max_speed')._value)
         self.get_logger().info('ticks_per_meter %f' % self.get_parameter('ticks_per_meter')._value)
@@ -376,9 +374,10 @@ class motorCtrl(Node):
     
     def publish_LineStatus(self, statusCode):
         try:
-            status = Int64()
+            status = Int32()
             status.data = statusCode
             self.linePublisher.publish(status)
+            print("/lineStatus published")
         except Exception as e:
             print(traceback.format_exc())
              
@@ -420,13 +419,15 @@ class motorCtrl(Node):
             UpdateValve = True
         
     def line_callback(self,line):
-        global gLine, gUpdateLine, gForward, gHoldRight, gSharpTurn, gInterSection
+        global gLine, gUpdateLine, gForward, gHoldRight, gSharpTurn, gInterSection, gDecision, gLineFast, gLineSlow
+        
         if (line.data == 0):
             gLine = False
             gForward = False
             gHoldRight = False
             gSharpTurn = False
             gInterSection = False
+            gDecision = False
             gUpdateLine = True
         elif (line.data == 1):
             gLine = True
@@ -434,6 +435,7 @@ class motorCtrl(Node):
             gHoldRight = False
             gSharpTurn = False
             gInterSection = False
+            gDecision = False
             gUpdateLine = True
         elif (line.data == 2):
             gLine = True
@@ -441,6 +443,7 @@ class motorCtrl(Node):
             gHoldRight = False
             gSharpTurn = False
             gInterSection = False
+            gDecision = False
             gUpdateLine = True
         elif(line.data == 3):
             gLine = True
@@ -448,6 +451,7 @@ class motorCtrl(Node):
             gHoldRight = True
             gSharpTurn = False
             gInterSection = True
+            gDecision = False
             gUpdateLine = True
         elif(line.data == 4):
             gLine = True
@@ -455,6 +459,7 @@ class motorCtrl(Node):
             gHoldRight = False
             gSharpTurn = True
             gInterSection = False
+            gDecision = False
             gUpdateLine = True
         elif(line.data == 5):
             gLine = True
@@ -462,7 +467,24 @@ class motorCtrl(Node):
             gHoldRight = False
             gSharpTurn = False
             gInterSection = True
+            gDecision = False
             gUpdateLine = True
+        elif(line.data == 6):
+            gDecision = True
+            gUpdateLine = True
+        elif(line.data == 7):
+            gLineSlow = True
+            gLineFast = False
+            gUpdateLine = True
+        elif(line.data == 8):
+            gLineSlow = False
+            gLineFast = False
+            gUpdateLine = True
+        elif(line.data == 9):
+            gLineSlow = False
+            gLineFast = True
+            gUpdateLine = True
+        
             
         else:
             gLine = False
@@ -470,7 +492,10 @@ class motorCtrl(Node):
             gHoldRight = False
             gSharpTurn = False
             gInterSection = False
+            gDecision = False
             gUpdateLine = True
+            gLineFast = False
+            gLineSlow = False
 
 
     # TODO: need clean shutdown so motors stop even if new msgs are arriving
@@ -481,16 +506,6 @@ class motorCtrl(Node):
         self.ros_topics_typ_datamodel.dispose()
         super().destroy_node()
 
-"""
-    def line_callback(self,line):
-        global gUpdateLine, gLine
-        if (line.data == True):
-            gUpdateLine = True
-            gLine = True
-        elif (line.data == False):
-            gUpdateLine = True
-            gLine = False
-"""
 
 
 def main(args=None):
@@ -505,40 +520,3 @@ def main(args=None):
 
 if __name__ == "__main__":
     main()    
-
-
-
-
-
-
-
-"""
-ros_topics_typ_datamodel = libros_topics_typ.libros_topics_typ_init()
-
-handler = ros_topics_typEventHandler()
-libros_topics_typ.add_event_handler(ros_topics_typ_datamodel, handler)
-
-try:
-    ros_topics_typ_datamodel.connect()
-    while True:
-        ros_topics_typ_datamodel.process()
-        # if ros_topics_typ_datamodel.is_connected:
-            # ros_topics_typ_datamodel.twist.value. .. = .. 
-            # ros_topics_typ_datamodel.twist.publish()
-            
-            # ros_topics_typ_datamodel.config.value. .. = .. 
-            # ros_topics_typ_datamodel.config.publish()
-            
-            # ros_topics_typ_datamodel.vaccumTopic.value. .. = .. 
-            # ros_topics_typ_datamodel.vaccumTopic.publish()
-            
-            # ros_topics_typ_datamodel.lineFollow.value. .. = .. 
-            # ros_topics_typ_datamodel.lineFollow.publish()
-            
-except(KeyboardInterrupt, SystemExit):
-    ros_topics_typ_datamodel.log.success("Application terminated, shutting down")
-
-ros_topics_typ_datamodel.disconnect()
-ros_topics_typ_datamodel.dispose()
-
-"""

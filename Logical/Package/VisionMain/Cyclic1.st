@@ -41,7 +41,7 @@ IF hwCam.in.status.imageAcquisitionReady AND NOT hwCam.in.status.imageProcessing
 		// Vi starter med at kigge om vores kamera har fundet nogen resultater
 		// Hvis der er resultater så begynder vi at proccess dem
 		IF hwBlob.in.common.numResults <> 0 AND orientationReached AND NOT awaitDecision THEN
-			lineStatus.lineStatusCode := 0;
+			
 				// Først vil vi gerne gemme det index af vores resultater som er  vores linje
 				// model 1 er den model der bruges til at finde linjen
 				// det index som indeholder linjen bliver gemt i test
@@ -93,32 +93,32 @@ IF hwCam.in.status.imageAcquisitionReady AND NOT hwCam.in.status.imageProcessing
 				// essentielt så kigger den om vores gulv blob ligger imellem x og y-max + min af vores linje blob
 				// tilføj illustration for dette
 				// muligvis tilføj noget der tjekker hvor rektangulær gulv blobben er, hvis den ikke er rektangulær er det nok en sammenfletning istedet for
-			IF floorBlob[0].rect < 70 OR cnt < 1  THEN
-				conditionX := TRUE;
-				conditionY := TRUE;
-			ELSE
-				conditionX := floorBlob[0].minXPos+100 > maxXPos-100 OR floorBlob[0].maxXPos -100 < minXPos+100; //OR floorBlob[1].minXPos +50 > maxXPos-50 OR floorBlob[1].maxXPos -50 < minXPos+50;
-				
-				conditionY := floorBlob[0].maxYPos -100 > minYPos +00 OR floorBlob[0].minYPos +100 < maxYPos-100; //OR floorBlob[1].maxYPos -50 > minYPos +50 OR floorBlob[1].minYPos +50 < maxYPos-50;
-		
-			END_IF
-			
-			conditionCheck := conditionX AND conditionY;
-			
-			IF NOT conditionCheck THEN
-				lineStatus.lineStatusCode := 20;
-				updateLineStatus := TRUE;
+//			IF floorBlob[0].rect < 90 OR cnt < 1  THEN
+//				conditionX := TRUE;
+//				conditionY := TRUE;
+//			ELSE
+//				conditionX := floorBlob[0].minXPos+75 > maxXPos-75 OR floorBlob[0].maxXPos -75 < minXPos+75; //OR floorBlob[1].minXPos +50 > maxXPos-50 OR floorBlob[1].maxXPos -50 < minXPos+50;
+//				
+//				conditionY := floorBlob[0].maxYPos -75 > minYPos +75 OR floorBlob[0].minYPos +75 < maxYPos-75; //OR floorBlob[1].maxYPos -50 > minYPos +50 OR floorBlob[1].minYPos +50 < maxYPos-50;
+//		
+//			END_IF
+//			
+//			conditionCheck := conditionX AND conditionY;
+//			
+//			IF NOT conditionCheck THEN
 //				awaitDecision := TRUE;
-			END_IF
+//			END_IF
+//			
+//			
+				
 				// Her tjekker vi om linjen bliver størrer, dette dækker tilfældet af sammenfletninger
-			IF blobArea > 850000 THEN
-
+			IF blobArea > 800000 THEN
+			
 				crossBool := TRUE;
 				IF crossBool <> prevCrossBool THEN
 					awaitDecision := TRUE;
 					updateLineStatus := TRUE;
 				END_IF
-				lineStatus.lineStatusCode := 30;
 
 				prevCrossBool := crossBool;
 			ELSE
@@ -129,8 +129,8 @@ IF hwCam.in.status.imageAcquisitionReady AND NOT hwCam.in.status.imageProcessing
 				// Hvis det er tilfældet af en sammenfletning så baseret på vores condition "holdRight" så drejer robotten til højre eller venstre
 				// dette burde at lede robotten til en af de linjer der sammenflettes
 				// derefter vil den gå tilbage til sit sædvanelige program
-			IF crossBool AND sammenEnable THEN
-				IF holdRight THEN  
+			IF crossBool AND (lineFollow.lineInterSection OR sammenEnable) THEN
+				IF lineFollow.lineHoldRight OR holdRight THEN  
 					angle := 0.60;
 				ELSE
 					angle := -0.60;
@@ -143,29 +143,47 @@ IF hwCam.in.status.imageAcquisitionReady AND NOT hwCam.in.status.imageProcessing
 					// i tilfældet af linjen er lige på så er vinkel super lille og dermed bliver differencen mellem vores hjul minimal
 					// ellers så bliver forskellen i hastigheden i mellem hjullene størrer baseret på vinklen
 					// essentielt så virker det som en simpel P-controller
-					// kunne udvides med et D komponentet til at håndtere noget overshoot på justeringen
+				// kunne udvides med et D komponentet til at håndtere noget overshoot på justeringen
+
 			ELSE 
 					
 				
 				angle := ASIN((640-posX)/SQRT(EXPT((640-posX),2)+EXPT((posY),2)));
 			END_IF
-			IF lineStatus.lineStatusCode = 0 THEN
-				evaluateStatus;
+			conditionCheck := minYPos < 10 AND maxYPos < 800; 
+			IF conditionCheck AND NOT crossBool THEN
+				//awaitDecision := TRUE;
 			END_IF
 			// her bestemmes den mode som giver værdier til motoren
-			IF NOT conditionCheck AND sharpTurn THEN
-				IF floorBlob[0].yPos > 512 AND floorBlob[0].xPos > 640 THEN
-					angle := 0.01;
-					drejMere := angle;
-					rightTurn := FALSE;
-				ELSIF floorBlob[0].yPos < 512 AND floorBlob[0].xPos < 640 THEN
-					rightTurn := TRUE;
-					angle := -0.01;
-					drejMere := angle;
-				END_IF 
-				orientationReached := FALSE;
-				Test2 := 20;			// som kan ses så hvor meget vi drejer er baseret på vinklen
-			// vores reference angle vil være 0 i dette tilfælde da det vil være samme orientation som linjen
+//				IF NOT conditionCheck AND (lineFollow.lineSharpTurn OR sharpTurn) THEN
+//					updateLineStatus := TRUE;
+//				
+//				IF floorBlob[0].yPos > 512 AND floorBlob[0].xPos > 640 THEN
+//					angle := 0.01;
+//					drejMere := angle;
+//					rightTurn := FALSE;
+//				ELSIF floorBlob[0].yPos < 512 AND floorBlob[0].xPos < 640 THEN
+//					rightTurn := TRUE;
+//					angle := -0.01;
+//					drejMere := angle;
+//				END_IF 
+//				orientationReached := FALSE;
+//				Test2 := 20;			// som kan ses så hvor meget vi drejer er baseret på vinklen
+				// vores reference angle vil være 0 i dette tilfælde da det vil være samme orientation som linjen
+			IF crossBool AND (lineFollow.lineInterSection OR sammenEnable) THEN
+				Test2 := 2;
+				drejMere := angle;
+				sammenEnable := FALSE;
+			ELSIF sharpTurn THEN
+				iVisionAlive := iVisionAlive +1;
+				Test2 := 20;
+				angle := -0.01;
+				drejMere := angle;
+			ELSIF maxYPos < 1023 AND minYPos > 10 AND (moveForward OR lineFollow.lineForward) THEN
+				angle := 0.01;
+				Test2 := -1;
+				drejMere := angle;
+			
 			ELSIF (xPosDiff > 0 OR xPosDiff < 0) AND orientationReached THEN //venstre
 				Test2 := 1;
 				drejMere := angle;
@@ -183,7 +201,7 @@ IF hwCam.in.status.imageAcquisitionReady AND NOT hwCam.in.status.imageProcessing
 		ELSIF awaitDecision THEN
 			Test2 := 0;
 		ELSIF orientationReached THEN
-			lineStatus.lineStatusCode := 90;
+
 		Test2 := 5;
 		IF angle < 0 THEN
 			drejMere := -0.16;

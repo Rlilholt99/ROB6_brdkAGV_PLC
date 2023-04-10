@@ -235,6 +235,7 @@ exos_dataset_handle_t *exos_datamodel_get_dataset(exos_datamodel_handle_t *datam
 EXOS_ERROR_CODE exos_datamodel_process(exos_datamodel_handle_t *datamodel);
 
 /**
+ * 
  * Get the current AR NETTIME (synchronized)
  * 
  * This function returns the current AR NETTIME (extrapolated in Linux)

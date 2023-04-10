@@ -14,4 +14,5 @@ VAR
 	lineStatus : ros_lineStatus;
 	awaitDecision : BOOL;
 	tempDec : BOOL;
+	sammenEnable : BOOL;
 END_VAR

@@ -6,6 +6,5 @@
     <File>Init1.st</File>
     <File Description="Local data types" Private="true">Types.typ</File>
     <File Private="true">Variables.var</File>
-    <File>evaluateStatus.st</File>
   </Files>
 </Program>

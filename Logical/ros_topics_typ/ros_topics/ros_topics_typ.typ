@@ -52,7 +52,7 @@ TYPE
 	ros_config_typ : 	STRUCT 
 		maxSpeed : LREAL := 2;
 		minSpeed : LREAL := -2;
-		baseWidth : LREAL := 0.53;
+		baseWidth : LREAL := 0.308;
 	END_STRUCT;
 	ros_topics_typ : 	STRUCT 
 		odemetry : ros_topic_odemety_typ; (*PUB*)
@@ -81,6 +81,9 @@ TYPE
 		lineHoldRight : BOOL;
 		lineForward : BOOL;
 		lineInterSection : BOOL;
+		lineDecision : BOOL;
+		lineFast : BOOL;
+		lineSlow : BOOL;
 	END_STRUCT;
 	ros_lineStatus : 	STRUCT 
 		lineStatusCode : INT;

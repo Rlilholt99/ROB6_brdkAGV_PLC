@@ -11,6 +11,9 @@
 #define VERBOSE(_format_, ...) exos_log_debug(&handle->logger, EXOS_LOG_TYPE_USER + EXOS_LOG_TYPE_VERBOSE, _format_, ##__VA_ARGS__);
 #define ERROR(_format_, ...) exos_log_error(&handle->logger, _format_, ##__VA_ARGS__);
 
+int test;
+int test2;
+
 typedef struct
 {
     void *self;
@@ -32,8 +35,7 @@ static void datasetEvent(exos_dataset_handle_t *dataset, EXOS_DATASET_EVENT_TYPE
 {
     struct ros_topics_typCyclic *inst = (struct ros_topics_typCyclic *)dataset->datamodel->user_context;
     ros_topics_typHandle_t *handle = (ros_topics_typHandle_t *)inst->Handle;
-    SUCCESS("test %i, confusion: %i",event_type,dataset->send_buffer.free)
-    
+
     switch (event_type)
     {
     case EXOS_DATASET_EVENT_UPDATED:
@@ -79,7 +81,6 @@ static void datasetEvent(exos_dataset_handle_t *dataset, EXOS_DATASET_EVENT_TYPE
         //handle each published dataset separately
         if(0 == strcmp(dataset->name, "odemetry"))
         {
-            //SUCCESS("odom published");
             // ros_topic_odemety_typ *odemetry_dataset = (ros_topic_odemety_typ *)dataset->data;
         }
         else if(0 == strcmp(dataset->name, "encoder"))
@@ -88,7 +89,6 @@ static void datasetEvent(exos_dataset_handle_t *dataset, EXOS_DATASET_EVENT_TYPE
         }
         else if(0 == strcmp(dataset->name, "lineStatus"))
         {
-            SUCCESS("lineStatus published");
             // ros_lineStatus *linestatus = (ros_lineStatus *)dataset->data;
         }
         break;
@@ -346,23 +346,43 @@ _BUR_PUBLIC void ros_topics_typCyclic(struct ros_topics_typCyclic *inst)
         EXOS_ASSERT_OK(exos_datamodel_process(ros_topics_typ_datamodel));
         //put your cyclic code here!
 
-        //publish the odemetry_dataset dataset as soon as there are changes
-        
-        memcpy(&data->odemetry, &inst->pros_topics_typ->odemetry, sizeof(data->odemetry));
-        exos_dataset_publish(odemetry_dataset);
+         if (exos_datamodel_get_nettime(odemetry_dataset->datamodel)- test > 28500 || exos_datamodel_get_nettime(odemetry_dataset->datamodel)- test < -28500  )
+        {
+            
+            test = exos_datamodel_get_nettime(odemetry_dataset->datamodel);
+            memcpy(&data->odemetry, &inst->pros_topics_typ->odemetry, sizeof(data->odemetry));
+            exos_dataset_publish(odemetry_dataset);
+
+            
+            
+        }
+
+        if (exos_datamodel_get_nettime(odemetry_dataset->datamodel)- test2 > 1000000 || exos_datamodel_get_nettime(odemetry_dataset->datamodel)- test2 < -1000000  )
+        {
+            
+            test2 = exos_datamodel_get_nettime(odemetry_dataset->datamodel);
+            
+
+            if (0 != memcmp(&inst->pros_topics_typ->lineStatus, &data->lineStatus, sizeof(data->lineStatus)))
+            {
+            memcpy(&data->lineStatus, &inst->pros_topics_typ->lineStatus, sizeof(data->lineStatus));
+            exos_dataset_publish(linestatus);
+            }
+            
+        }
+         
+        //}
+        //}
         
         //publish the encoder_dataset dataset as soon as there are changes
+        
         if (0 != memcmp(&inst->pros_topics_typ->encoder, &data->encoder, sizeof(data->encoder)))
         {
             memcpy(&data->encoder, &inst->pros_topics_typ->encoder, sizeof(data->encoder));
             exos_dataset_publish(encoder_dataset);
         }
         //publish the linestatus dataset as soon as there are changes
-        if (0 != memcmp(&inst->pros_topics_typ->lineStatus, &data->lineStatus, sizeof(data->lineStatus)))
-        {
-        memcpy(&data->lineStatus, &inst->pros_topics_typ->lineStatus, sizeof(data->lineStatus));
-        exos_dataset_publish(linestatus);
-        }
+       
 
         break;
 
