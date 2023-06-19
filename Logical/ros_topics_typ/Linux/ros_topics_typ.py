@@ -237,11 +237,11 @@ class motorCtrl(Node):
         self.declare_parameters(
             namespace='',
             parameters=[
-                ('min_speed', -0.4), #m/s
-                ('max_speed', 0.4), #m/s
+                ('min_speed', -1.0), #m/s
+                ('max_speed', 1.0), #m/s
                 ('ticks_per_meter', 105860), #encoder ticks per meter driven 
                 ('base_width', 0.303), #distance between the middle of the wheels in meters
-                ('vel_topic', 'cmd_vel'),
+                ('vel_topic', 'cmd_vel_mux'),
                 ('vaccumTopic', 'vaccumControl'),
                 ('lineFollow', 'cmd_lineFollow')
             ]
@@ -366,7 +366,7 @@ class motorCtrl(Node):
             odom.twist.twist.angular.z = 0.0 #vth
             odom.twist.covariance = odom.pose.covariance
             self.publisher_.publish(odom)
-            print("/odom published!")
+            #print("/odom published!")
 
      
         except Exception as e:
@@ -484,6 +484,24 @@ class motorCtrl(Node):
             gLineSlow = False
             gLineFast = True
             gUpdateLine = True
+        elif(line.data == 10):
+            gLine = True
+            gForward = True
+            gHoldRight = False
+            gSharpTurn = False
+            gInterSection = True
+            gDecision = False
+            gUpdateLine = True
+        elif(line.data == 11):
+            gLine = True
+            gForward = False
+            gHoldRight = True
+            gSharpTurn = False
+            gInterSection = False
+            gDecision = False
+            gUpdateLine = True
+            
+
         
             
         else:

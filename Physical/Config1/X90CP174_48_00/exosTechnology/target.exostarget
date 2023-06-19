@@ -3,12 +3,12 @@
 <Configuration>
   <Element ID="gTarget_0" Type="exostarget">
     <Group ID="General">
-      <Property ID="ConnectionIP" Value="192.168.87.128" />
+      <Property ID="ConnectionIP" Value="192.168.87.42" />
       <Group ID="Logging">
         <Property ID="LogLevel" Value="Success" />
         <Group ID="LogFilters">
           <Property ID="LogFilterUser" Value="On" />
-          <Property ID="LogFilterSystem" Value="Off" />
+          <Property ID="LogFilterSystem" Value="On" />
           <Property ID="LogFilterVerbose" Value="Off" />
         </Group>
         <Property ID="LogDestination" Value="Volatile" />
@@ -156,7 +156,7 @@
       </Group>
     </Group>
     <Group ID="Simulation">
-      <Property ID="SimConnectionIP" Value="192.168.87.128" />
+      <Property ID="SimConnectionIP" Value="192.168.87.42" />
       <Selector ID="SimDeployment" Value="On" />
       <Selector ID="SimDataConnection" Value="On">
         <Property ID="SimConnectionType" Value="TCPIP" />

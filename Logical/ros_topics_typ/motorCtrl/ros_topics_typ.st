@@ -91,10 +91,10 @@ PROGRAM _CYCLIC
 	
 	
 	ExDataConnectionInfo_0(ExTargetLink := ADR(gTarget_0),Enable := TRUE);
-	
+	 	
 	forwardTimer();
 	moveForwardTimer();
-	kp := 0.7;
+	kp := 0.7 	;
 	kd := 2500;
 	suction.motorEnable := ros.topics.vaccumTopic.vaccumMotor;
 	suction.valveEnable := ros.topics.vaccumTopic.vaccumValve;
@@ -119,8 +119,9 @@ PROGRAM _CYCLIC
 				0:	
 					IF tempDec <> FALSE THEN
 						awaitDecision := FALSE;
-						tempDec := FALSE;
+						// tempDec := FALSE;
 						orientationReached := TRUE;
+						Test2 := 1;
 					ELSE
 						tempDec := lineFollow.lineDecision;
 //						sharpTurn  := lineFollow.lineSharpTurn;
@@ -149,21 +150,33 @@ PROGRAM _CYCLIC
 					drejMere := drejMere + errOld;
 					
 				2:
-					iAlive := iAlive +1;
-					orientationReached := FALSE;
-					sammenEnable := FALSE;
 					lineStatus.lineStatusCode := 70;
-					moveForwardTimer.PT := T#3000ms;
-					moveForwardTimer.IN := TRUE;
+					CASE turnSwitch OF
+						
+
+						0:
+							orientationReached := FALSE;
+							turnSwitch := 1;
+
+						1:
+							moveForwardTimer.PT := T#3000ms;
+							moveForwardTimer.IN := TRUE;
+							IF moveForwardTimer.Q THEN
+								moveForwardTimer.IN := FALSE;
+								turnSwitch := 2;
+
+							END_IF
+						2:
+							orientationReached := TRUE;
+
+							sammenEnable := FALSE;
+							turnSwitch := 0;
+					END_CASE
+					iAlive := iAlive +1;
+					
 					localVariables[0].PID.SetValue := LREAL_TO_REAL(-((drejMere)*kp*ros.topics.config.baseWidth/2.0));
 					localVariables[1].PID.SetValue := LREAL_TO_REAL(((drejMere)*kp*ros.topics.config.baseWidth/2.0));
-					IF moveForwardTimer.Q THEN
-						
-						moveForwardTimer.IN := FALSE;
-						orientationReached := TRUE;
-						Test2 := 1;
-
-					END_IF
+					
 				-1:
 					CASE turnSwitch OF
 						0:
@@ -188,8 +201,8 @@ PROGRAM _CYCLIC
 						
 						7:
 							forwardTimer.PT := T#3000ms;
-							localVariables[0].PID.SetValue := 0.05;
-							localVariables[1].PID.SetValue := 0.05;
+							localVariables[0].PID.SetValue := 0.4;
+							localVariables[1].PID.SetValue := 0.4;
 							forwardTimer.IN := TRUE;
 							IF forwardTimer.Q THEN
 								localVariables[0].PID.SetValue := 0;
@@ -256,10 +269,10 @@ PROGRAM _CYCLIC
 							orientationReached := FALSE;
 							startOrientation := LREAL_TO_REAL(ros.cur_theta);
 							IF rightTurn THEN
-								goalOrientation := startOrientation - 1.4929;
+								goalOrientation := startOrientation - 1.5429;
 								turnSwitch := 5;
 							ELSE
-								goalOrientation := startOrientation + 1.4929;
+								goalOrientation := startOrientation + 1.5429;
 								turnSwitch := 5;
 							END_IF
 							
@@ -272,9 +285,9 @@ PROGRAM _CYCLIC
 							END_IF
 						
 						7:
-							forwardTimer.PT := T#5000ms;
-							localVariables[0].PID.SetValue := 0.05;
-							localVariables[1].PID.SetValue := 0.05;
+							forwardTimer.PT := T#2500ms;
+							localVariables[0].PID.SetValue := 0.1;
+							localVariables[1].PID.SetValue := 0.1;
 							forwardTimer.IN := TRUE;
 							IF forwardTimer.Q THEN
 								localVariables[0].PID.SetValue := 0;
@@ -298,11 +311,11 @@ PROGRAM _CYCLIC
 							lastOrientation := LREAL_TO_REAL(ros.cur_theta);
 							remainingOrientation := LREAL_TO_REAL(goalOrientation - ros.cur_theta);
 							IF rightTurn THEN
-								localVariables[0].PID.SetValue := -0.05;
-								localVariables[1].PID.SetValue := 0.05;
+								localVariables[0].PID.SetValue := -0.15;
+								localVariables[1].PID.SetValue := 0.15;
 							ELSE 
-								localVariables[0].PID.SetValue := 0.05;
-								localVariables[1].PID.SetValue := -0.05;
+								localVariables[0].PID.SetValue := 0.15;
+								localVariables[1].PID.SetValue := -0.15;
 								END_IF
 						20:
 							orientationReached := TRUE;
@@ -348,6 +361,7 @@ PROGRAM _CYCLIC
 					localVariables[0].PID.SetValue := 0;
 					localVariables[1].PID.SetValue := 0;
 				1:
+					orientationReached := TRUE;
 					//iAlive := iAlive +1;
 					IF lineFollow.lineSlow THEN
 						localVariables[0].PID.SetValue := LREAL_TO_REAL(0.1-((drejMere-errOld)*kp + kd*(errOld)*ros.topics.config.baseWidth/2.0));
@@ -365,19 +379,54 @@ PROGRAM _CYCLIC
 					
 					
 				2:
-					orientationReached := FALSE;
 					lineStatus.lineStatusCode := 70;
-					moveForwardTimer.PT := T#3000ms;
-					moveForwardTimer.IN := TRUE;
+					CASE turnSwitch2 OF
+						
+
+						0:
+							orientationReached := FALSE;
+							turnSwitch2 := 1;
+
+						1:
+							moveForwardTimer.PT := T#3000ms;
+							moveForwardTimer.IN := TRUE;
+							IF moveForwardTimer.Q THEN
+								moveForwardTimer.IN := FALSE;
+								turnSwitch2 := 2;
+							END_IF
+						2:
+							orientationReached := TRUE;
+
+							sammenEnable := FALSE;
+							turnSwitch2 := 0;
+					END_CASE
 					localVariables[0].PID.SetValue := LREAL_TO_REAL(0.1-((drejMere)*kp*ros.topics.config.baseWidth/2.0));
 					localVariables[1].PID.SetValue := LREAL_TO_REAL(0.1+((drejMere)*kp*ros.topics.config.baseWidth/2.0));
 					
-					IF moveForwardTimer.Q THEN
-						orientationReached := TRUE;
-						moveForwardTimer.IN := FALSE;
-						
-
-					END_IF
+				
+					
+				3:
+					CASE turnSwitch3 OF
+						0:
+							orientationReached := FALSE;
+							turnSwitch3 := 1;
+						1:
+							forwardTimer.PT := T#1000ms;
+							forwardTimer.IN := TRUE;
+							localVariables[0].PID.SetValue := 0.2;
+							localVariables[1].PID.SetValue := 0.2;
+							IF forwardTimer.Q THEN
+								turnSwitch3 := 2;
+								forwardTimer.IN := FALSE;
+							END_IF
+						2:
+							localVariables[0].PID.SetValue := 0;
+							localVariables[1].PID.SetValue := 0;
+							lineStatus.lineStatusCode := 60;
+							orientationReached := TRUE;
+							turnSwitch3 := 0;
+							Test2 := 10;
+					END_CASE
 				-1:
 					
 					CASE turnSwitch OF
@@ -450,8 +499,8 @@ PROGRAM _CYCLIC
 					oldOrientation := 0;
 					IF lineFollow.lineForward THEN
 						lineStatus.lineStatusCode := 90;
-						localVariables[0].PID.SetValue := 0.1;
-						localVariables[1].PID.SetValue := 0.1;
+						localVariables[0].PID.SetValue := 0.2;
+						localVariables[1].PID.SetValue := 0.2;
 						moveForwardTimer.PT := T#5000ms;
 						moveForwardTimer.IN := TRUE;
 						IF moveForwardTimer.Q THEN
@@ -535,7 +584,8 @@ PROGRAM _CYCLIC
 					
 			END_CASE	
 		ELSE
-			
+			tempDec := TRUE;
+			Test2 := 1;
 			localVariables[0].PID.SetValue := LREAL_TO_REAL(ros.topics.twist.linear.x + ros.topics.twist.angular.z * ros.topics.config.baseWidth / 2.0) * ros.currentLimiter;  // m/s
 			localVariables[1].PID.SetValue := LREAL_TO_REAL(ros.topics.twist.linear.x - ros.topics.twist.angular.z * ros.topics.config.baseWidth / 2.0) * ros.currentLimiter;
 		END_IF

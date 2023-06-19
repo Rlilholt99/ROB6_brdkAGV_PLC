@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ComponentPackage Version="2.0.0" ErrorHandling="Component" StartupTimeout="0">
     <File FileName="Linux\ros_topics_typ.py" ChangeEvent="Restart"/>
     <File FileName="Linux\exos-comp-ros_topics_typ_1.0.0_amd64.deb" ChangeEvent="Reinstall"/>
     <Service Type="Install" Command="dpkg -i exos-comp-ros_topics_typ_1.0.0_amd64.deb"/>
     <Service Type="Remove" Command="dpkg --purge exos-comp-ros_topics_typ"/>
-    <Service Type="Startup" Command="cp ros_topics_typ.py /home/user/brdkAGV_linux/ros_ws/src/motor_control_exos/motor_control_exos/motor_control_exos.py"/>
-    <DatamodelInstance Name="ros_topics_typ_0"/>
+	<Service Type="Startup" Command="cp ros_topics_typ.py /home/user/brdkAGV_linux/ros_ws/src/motor_control_exos/motor_control_exos/motor_control_exos.py"/>
+	<DatamodelInstance Name="ros_topics_typ_0"/>
     <Build>
         <GenerateDatamodel FileName="ros_topics\ros_topics_typ.typ" TypeName="ros_topics_typ">
             <SG4 Include="ros_topics.h"/>

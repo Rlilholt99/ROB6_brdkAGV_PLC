@@ -25,7 +25,9 @@ PROGRAM _CYCLIC
 	hwBlob.out.common.offsetROI.x := 0; 
 	hwBlob.out.common.offsetROI.y := 0;
 	hwCam.out.par.focus := 11000;
-	hwCam.out.par.flashColor := 99;
+	hwCam.out.par.flashColor := 99; // WHITE
+	//hwCam.out.par.flashColor := 100; //INfRA RED
+	//hwCam.out.par.IRFilter := TRUE; // ENABLE IR FILTER 
 	hwCam.out.par.flashSegment := 4;
 	hwCam.out.par.exposureTime := 1000;
 	imgTrig.pCameraHw := ADR(hwCam);
@@ -112,8 +114,8 @@ IF hwCam.in.status.imageAcquisitionReady AND NOT hwCam.in.status.imageProcessing
 //			
 				
 				// Her tjekker vi om linjen bliver størrer, dette dækker tilfældet af sammenfletninger
-			IF blobArea > 800000 THEN
-			
+			IF blobArea > 910000 AND (lineFollow.lineMode OR lineMode) THEN
+			 	
 				crossBool := TRUE;
 				IF crossBool <> prevCrossBool THEN
 					awaitDecision := TRUE;
@@ -143,7 +145,7 @@ IF hwCam.in.status.imageAcquisitionReady AND NOT hwCam.in.status.imageProcessing
 					// i tilfældet af linjen er lige på så er vinkel super lille og dermed bliver differencen mellem vores hjul minimal
 					// ellers så bliver forskellen i hastigheden i mellem hjullene størrer baseret på vinklen
 					// essentielt så virker det som en simpel P-controller
-				// kunne udvides med et D komponentet til at håndtere noget overshoot på justeringen
+				// kunne udvides med et D komponentet til at håndtere noget overshoot på justeringen 	
 
 			ELSE 
 					
@@ -170,10 +172,13 @@ IF hwCam.in.status.imageAcquisitionReady AND NOT hwCam.in.status.imageProcessing
 //				orientationReached := FALSE;
 //				Test2 := 20;			// som kan ses så hvor meget vi drejer er baseret på vinklen
 				// vores reference angle vil være 0 i dette tilfælde da det vil være samme orientation som linjen
-			IF crossBool AND (lineFollow.lineInterSection OR sammenEnable) THEN
+			IF sammenEnable THEN
+				IF moveForward THEN
+					Test2 := 3;
+				ELSE
 				Test2 := 2;
 				drejMere := angle;
-				sammenEnable := FALSE;
+				END_IF	
 			ELSIF sharpTurn THEN
 				iVisionAlive := iVisionAlive +1;
 				Test2 := 20;
@@ -202,18 +207,25 @@ IF hwCam.in.status.imageAcquisitionReady AND NOT hwCam.in.status.imageProcessing
 			Test2 := 0;
 		ELSIF orientationReached THEN
 
-		Test2 := 5;
-		IF angle < 0 THEN
-			drejMere := -0.16;
-		ELSE
-			drejMere := 0.16;
-		END_IF
+//		IF lineFollow.lineHoldRight THEN
+//			drejMere := 0.4;
+//		ELSE
+			IF angle < 0 THEN
+				drejMere := -0.4;
+				Test2 := 5;
+
+			ELSE
+				drejMere := 0.4;
+				Test2 := 5;
+
+			END_IF
+		END_IF	
 			// i tilfældet af at  vi ikke finder nogen resultater med kameraet så vil robotten rotere til den retning den sidste ville til
 			// dette er for at at lave noget recovery i tilfælde af robotten mister linjen
 			// den kunne ende med at rotere helt om sig selv og dermed finde linjen tilbage
 
 		
-	END_IF
+//	END_IF
 		//		END_IF
 		
 END_IF
